@@ -1,0 +1,19 @@
+*** ff.start	Wed Apr 22 04:26:10 2009
+--- ff.start.bk	Wed Apr 22 04:25:28 2009
+***************
+*** 19,25 ****
+  screen -r FF -p 0 -X logfile ~/log/FF-output.log
+  screen -r FF -p 0 -X log on
+  screen -r FF -p 0 -X logfile flush 10
+! screen -r FF -p 0 -X stuff "$(printf '%b' "sh $BSCS_ROOT/scripts/startFF.wily.sh\015")"
+  sleep 8
+  echo "FF initialized"
+  
+--- 19,25 ----
+  screen -r FF -p 0 -X logfile ~/log/FF-output.log
+  screen -r FF -p 0 -X log on
+  screen -r FF -p 0 -X logfile flush 10
+! screen -r FF -p 0 -X stuff "$(printf '%b' "sh $BSCS_ROOT/scripts/startFF.sh\015")"
+  sleep 8
+  echo "FF initialized"
+  

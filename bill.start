@@ -1,0 +1,25 @@
+#!/bin/sh 
+# vim: set ts=3 sw=3 sts=3 et si ai: 
+# 
+# bill.start -- put here a short description 
+# --------------------------------------------------------------------
+# (c) 2009 NEXTEL DE MEXICO
+
+if [ -e ~/log/BILL-output.log ]
+then
+  BACKUPDIR=`date '+%Y%m%d'`
+  mkdir -p ~/log/${BACKUPDIR}
+  mv ~/log/BILL-output.log ~/log/${BACKUPDIR}/BILL.log.`date '+%H%M'`
+fi
+
+# 
+# Bill server
+screen -dmS BILL
+screen -r BILL -p 0 -X log off
+screen -r BILL -p 0 -X logfile ~/log/BILL-output.log
+screen -r BILL -p 0 -X log on
+screen -r BILL -p 0 -X logfile flush 10
+screen -r BILL -p 0 -X stuff "$(printf '%b' "sh $BSCS_ROOT/scripts/startBillSrv.sh\015")"
+sleep 8
+echo "BILL initialized"
+

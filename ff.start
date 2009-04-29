@@ -1,0 +1,25 @@
+#!/bin/sh 
+# vim: set ts=3 sw=3 sts=3 et si ai: 
+# 
+# ff.start -- put here a short description 
+# --------------------------------------------------------------------
+# (c) 2009 NEXTEL DE MEXICO
+
+if [ -e ~/log/FF-output.log ]
+then
+  BACKUPDIR=`date '+%Y%m%d'`
+  mkdir -p ~/log/${BACKUPDIR}
+  mv ~/log/FF-output.log ~/log/${BACKUPDIR}/FF.log.`date '+%H%M'`
+fi
+
+# 
+# Federate Factory
+screen -dmS FF
+screen -r FF -p 0 -X log off
+screen -r FF -p 0 -X logfile ~/log/FF-output.log
+screen -r FF -p 0 -X log on
+screen -r FF -p 0 -X logfile flush 10
+screen -r FF -p 0 -X stuff "$(printf '%b' "sh $BSCS_ROOT/scripts/startFF.sh\015")"
+sleep 8
+echo "FF initialized"
+

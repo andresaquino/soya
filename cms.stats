@@ -1,0 +1,36 @@
+#!/bin/sh 
+# vim: set ts=3 sw=3 sts=3 et si ai: 
+# 
+# cms.statistics -- put here a short description 
+# --------------------------------------------------------------------
+# (c) 2009 NEXTEL DE MEXICO
+
+INSTANCES=$1
+[ ${INSTANCES} ] && [ ${INSTANCES} -gt 1 2>/dev/null ] || INSTANCES=3
+
+COUNT=0
+while [ ${COUNT} -le ${INSTANCES} ]
+do
+  #
+  # CMS
+  CMSNAME="CMS${COUNT}"
+
+  echo "\n\n`date`\n\n\n" >> ../log/${CMSNAME}.statistics
+  screen -x ${CMSNAME} -p 0 -X logfile flush 1
+  tail -f ../log/${CMSNAME}-output.log >> ../log/${CMSNAME}.statistics &
+  LPID=$! 
+  screen -x ${CMSNAME} -p 0 -X stuff "$(printf '%b' "clients\015")"
+  sleep 2
+  screen -x ${CMSNAME} -p 0 -X logfile flush 10
+  kill -15 ${LPID}
+
+  # analyze
+  echo "${CMSNAME} STATISTICS FILE ANALYZED"
+  echo "--"
+  echo "COUNT    | DATE       | HOUR     | FACTOR  | USER    "
+  tail -n60 ../log/${CMSNAME}.statistics | awk 'BEGIN{FS=" "} /factory name/{print substr($23"          ",1,8)" | "$11" | "$12" | "substr($4"                ",1,8)" | "$6}'  | sed "s/,//g" | sort -n | uniq | tail -n20
+  COUNT=$(($COUNT+1))
+  echo "press [Enter]..."
+  read
+done
+
