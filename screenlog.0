@@ -1,0 +1,96 @@
+. ~/fromUSB/nextel.com.mx/soi.git/testapp.sh TESTAPP 2
+[01;33mandresaquino[00m@10.103.22.30 [01;30msoi.git [00m(v0.2unstable)$ . ~/fromUSB/nextel.com.mx/soi. git/testapp.sh TESTAPP 2
+executing...Tue May 19 19:13:42 CDT 2009
+executing...Tue May 19 19:13:47 CDT 2009
+executing...Tue May 19 19:13:52 CDT 2009
+executing...Tue May 19 19:13:57 CDT 2009
+executing...Tue May 19 19:14:02 CDT 2009
+executing...Tue May 19 19:14:07 CDT 2009
+executing...Tue May 19 19:14:12 CDT 2009
+executing...Tue May 19 19:14:17 CDT 2009
+executing...Tue May 19 19:14:22 CDT 2009
+executing...Tue May 19 19:14:27 CDT 2009
+executing...Tue May 19 19:14:32 CDT 2009
+executing...Tue May 19 19:14:37 CDT 2009
+executing...Tue May 19 19:14:42 CDT 2009
+. ~/fromUSB/nextel.com.mx/soi.git/testapp.sh TESTAPP 4
+[01;33mandresaquino[00m@10.103.22.30 [01;30msoi.git [00m(v0.2unstable)$ . ~/fromUSB/nextel.com.mx/soi. git/testapp.sh TESTAPP 4
+executing...Tue May 19 19:15:09 CDT 2009
+executing...Tue May 19 19:15:14 CDT 2009
+executing...Tue May 19 19:15:20 CDT 2009
+executing...Tue May 19 19:15:25 CDT 2009
+executing...Tue May 19 19:15:30 CDT 2009
+executing...Tue May 19 19:15:35 CDT 2009
+executing...Tue May 19 19:15:40 CDT 2009
+executing...Tue May 19 19:15:45 CDT 2009
+executing...Tue May 19 19:15:50 CDT 2009
+executing...Tue May 19 19:15:55 CDT 2009
+executing...Tue May 19 19:16:00 CDT 2009
+executing...Tue May 19 19:16:05 CDT 2009
+executing...Tue May 19 19:16:10 CDT 2009
+executing...Tue May 19 19:16:15 CDT 2009
+executing...Tue May 19 19:16:20 CDT 2009
+executing...Tue May 19 19:16:25 CDT 2009
+executing...Tue May 19 19:16:30 CDT 2009
+executing...Tue May 19 19:16:35 CDT 2009
+executing...Tue May 19 19:16:40 CDT 2009
+executing...Tue May 19 19:16:45 CDT 2009
+executing...Tue May 19 19:16:50 CDT 2009
+executing...Tue May 19 19:16:55 CDT 2009
+executing...Tue May 19 19:17:00 CDT 2009
+executing...Tue May 19 19:17:05 CDT 2009
+executing...Tue May 19 19:17:10 CDT 2009
+executing...Tue May 19 19:17:15 CDT 2009
+executing...Tue May 19 19:17:20 CDT 2009
+executing...Tue May 19 19:17:25 CDT 2009
+executing...Tue May 19 19:17:30 CDT 2009
+executing...Tue May 19 19:17:35 CDT 2009
+^C
+[01;33mandresaquino[00m@10.103.22.30 [01;30msoi.git [00m(v0.2unstable)$ exit
+. ~/fromUSB/nextel.com.mx/soi.git/testapp.sh TESTAPP3 3
+[01;33mandresaquino[00m@10.103.22.30 [01;30msoi.git [00m(v0.2unstable)$ . ~/fromUSB/nextel.com.mx/soi. git/testapp.sh TESTAPP3 3
+executing...Tue May 19 19:20:09 CDT 2009
+executing...Tue May 19 19:20:14 CDT 2009
+executing...Tue May 19 19:20:19 CDT 2009
+executing...Tue May 19 19:20:24 CDT 2009
+executing...Tue May 19 19:20:29 CDT 2009
+executing...Tue May 19 19:20:34 CDT 2009
+executing...Tue May 19 19:20:39 CDT 2009
+executing...Tue May 19 19:20:44 CDT 2009
+executing...Tue May 19 19:20:49 CDT 2009
+executing...Tue May 19 19:20:54 CDT 2009
+executing...Tue May 19 19:20:59 CDT 2009
+executing...Tue May 19 19:21:04 CDT 2009
+executing...Tue May 19 19:21:09 CDT 2009
+executing...Tue May 19 19:21:14 CDT 2009
+executing...Tue May 19 19:21:19 CDT 2009
+executing...Tue May 19 19:21:24 CDT 2009
+executing...Tue May 19 19:21:29 CDT 2009
+executing...Tue May 19 19:21:34 CDT 2009
+executing...Tue May 19 19:21:39 CDT 2009
+executing...Tue May 19 19:21:44 CDT 2009
+executing...Tue May 19 19:21:49 CDT 2009
+executing...Tue May 19 19:21:54 CDT 2009
+executing...Tue May 19 19:21:59 CDT 2009
+executing...Tue May 19 19:22:04 CDT 2009
+executing...Tue May 19 19:22:09 CDT 2009
+executing...Tue May 19 19:22:14 CDT 2009
+executing...Tue May 19 19:22:19 CDT 2009
+executing...Tue May 19 19:22:24 CDT 2009
+executing...Tue May 19 19:22:29 CDT 2009
+executing...Tue May 19 19:22:34 CDT 2009
+executing...Tue May 19 19:22:39 CDT 2009
+executing...Tue May 19 19:22:44 CDT 2009
+executing...Tue May 19 19:22:49 CDT 2009
+executing...Tue May 19 19:22:54 CDT 2009
+executing...Tue May 19 19:22:59 CDT 2009
+executing...Tue May 19 19:23:04 CDT 2009
+executing...Tue May 19 19:23:09 CDT 2009
+executing...Tue May 19 19:23:14 CDT 2009
+executing...Tue May 19 19:23:19 CDT 2009
+executing...Tue May 19 19:23:24 CDT 2009
+executing...Tue May 19 19:23:29 CDT 2009
+executing...Tue May 19 19:23:34 CDT 2009
+executing...Tue May 19 19:23:39 CDT 2009
+executing...Tue May 19 19:23:44 CDT 2009
+executing...Tue May 19 19:23:49 CDT 2009
