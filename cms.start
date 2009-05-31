@@ -6,7 +6,7 @@
 # (c) 2009 NEXTEL DE MEXICO
 
 INSTANCES=$1
-[ ${INSTANCES} ] && [ ${INSTANCES} -gt 1 2>/dev/null ] || INSTANCES=5
+[ ${INSTANCES} ] && [ ${INSTANCES} -gt 1 2>/dev/null ] || INSTANCES=3
 
 BACKUPDIR=`date '+%Y%m%d'`
 mkdir -p ~/log/${BACKUPDIR}
@@ -32,4 +32,4 @@ do
   COUNT=$(($COUNT+1))
 done
 
-echo ${INSTANCES} > ~/AQUINO/.instances
+echo ${INSTANCES} > ~/AQUINO/.cms

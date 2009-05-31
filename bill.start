@@ -5,21 +5,32 @@
 # --------------------------------------------------------------------
 # (c) 2009 NEXTEL DE MEXICO
 
-if [ -e ~/log/BILL-output.log ]
-then
-  BACKUPDIR=`date '+%Y%m%d'`
-  mkdir -p ~/log/${BACKUPDIR}
-  mv ~/log/BILL-output.log ~/log/${BACKUPDIR}/BILL.log.`date '+%H%M'`
-fi
+INSTANCES=$1
+[ ${INSTANCES} ] && [ ${INSTANCES} -gt 1 2>/dev/null ] || INSTANCES=4
 
-# 
-# Bill server
-screen -dmS BILL
-screen -r BILL -p 0 -X log off
-screen -r BILL -p 0 -X logfile ~/log/BILL-output.log
-screen -r BILL -p 0 -X log on
-screen -r BILL -p 0 -X logfile flush 10
-screen -r BILL -p 0 -X stuff "$(printf '%b' "sh $BSCS_ROOT/scripts/startBillSrv.sh\015")"
-sleep 8
-echo "BILL initialized"
+BACKUPDIR=`date '+%Y%m%d'`
+mkdir -p ~/log/${BACKUPDIR}
+
+COUNT=0
+while [ ${COUNT} -lt ${INSTANCES} ]
+do
+  #
+  # BILL
+  BILLNAME="BILL${COUNT}"
+  if [ -e ~/log/${BILLNAME}-output.log ]
+  then
+     mv ~/log/${BILLNAME}-output.log ~/log/${BACKUPDIR}/${BILLNAME}.log.`date '+%H%M'`
+  fi
+  screen -dmS ${BILLNAME}
+  screen -r ${BILLNAME} -p 0 -X log off
+  screen -r ${BILLNAME} -p 0 -X logfile ~/log/${BILLNAME}-output.log
+  screen -r ${BILLNAME} -p 0 -X log on
+  screen -r ${BILLNAME} -p 0 -X logfile flush 10
+  screen -r ${BILLNAME} -p 0 -X stuff "$(printf '%b' "sh $BSCS_ROOT/scripts/startBillSrv.sh ${COUNT}\015")"
+  sleep 9
+  echo "${BILLNAME} initialized"
+  COUNT=$(($COUNT+1))
+done
+
+echo ${INSTANCES} > ~/AQUINO/.bill
 

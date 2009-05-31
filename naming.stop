@@ -7,7 +7,7 @@
 
 #
 # primero instancias de screen
-screen -r NAMING -p 0 -X quit > /dev/null 2>&1 
+screen -x NAMING -p 0 -X quit > /dev/null 2>&1 
 sleep 8
 echo "NAMING process finalized"
 

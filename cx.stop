@@ -6,7 +6,7 @@
 # (c) 2009 NEXTEL DE MEXICO
 
 # primero instancias de screen
-screen -r CX -p 0 -X quit > /dev/null 2>&1 
+screen -x CX -p 0 -X quit > /dev/null 2>&1 
 sleep 8
 echo "CX process finalized"
 

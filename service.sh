@@ -6,65 +6,79 @@
 # (c) 2009 NEXTEL DE MEXICO
 
 # get application Name and Action
-apDir=`dirname ${0}`
+apHome=/home/andresaquino/fromUSB/nextel.com.mx/soi.git
+apDir=`dirname ${PWD}/${0}`
 apName=`basename ${0%.*}`
-apAction=`basename ${0#*.}`
+apAction=`basename ${0#*.} | tr "[:upper:]" "[:lower:]"`
 apConf=${apDir}/${apName}.conf
+apProcesses=0                                               # by default, don't start any application
+apAuthorized=false
+
+# move to application home directory
+cd ${apHome}
 
 # verify application
 [ ! -h ${0} ] && echo "hey!, use ln -sf service application-name.{start|stop}" && exit 1
 
-# verify app config
-[ ! -r ${apConf} ] && echo "Can't find ${apConf} !" && exit 1
-
-# by default, don't start any application
-apProcesses=0
-
 # read app config
+[ ! -e ${apConf} ] && echo "hey!, i need a config file like ${apConf}" && exit 1
+
+. utils.lib.sh
 . ${apConf}
 
-#echo "Action: ${apAction} of Application: ${apName}"
-#echo "Executing: ${apCommand}"
+# autorizada para levantar
+[ ${apAuthorized} ] || (echo "uhmmm, this is a bad idea..." && exit 1)
 
-# si se indico el numero de procesos a levantar
+# si se indico el numero de proceso a levantar
 [ ${1} ] && apProcesses=${1}
 
-# si es mayor a 0, inicia al menos 1 proceso
-if [ ${apProcesses} -gt 0 2>/dev/null ]
+# START
+if [ ${apAction} = "start" ]
 then
-   # backup
-   apBackup=`date '+%Y%m%d'`
-   mkdir -p ~/log/${apBackup}
+   # exite otra aplicacion?
+   scName=`echo ${apName}${apProcesses} | tr "[:lower:]" "[:upper:]"`
+   cnName=`screen -ls | grep ${scName} | wc -l`
+   apLog="${apHome}/log/${scName}-output.log"
    
-   #
-   echo "Starting ${apProcesses} processes"
-   pCount=1
-   while [ ${pCount} -le ${apProcesses} ]
-   do
-      #
-      # Application 
-      scName=`echo ${apName}${pCount} | tr "[:lower:]" "[:upper:]"`
-      echo "ID ${scName} initialized"
-      if [ -e ~/log/${scName}-output.log ]
+   # si no hay otro proceso
+   if [ ${cnName} -eq 0 ]
+   then
+      if [ ${apProcesses} -ge 0 2>/dev/null ]
       then
-         mv ~/log/${scName}-output.log ~/log/${apBackup}/${scName}.log.`date '+%H%M'`
+         # backup
+         apBackup=`date '+%Y%m%d'`
+         mkdir -p ${apHome}/log/${apBackup}
+         mv ${apLog} ${apHome}/log/${apBackup}/${scName}-output.log.`date '+%H%M'`
       fi
-
-      # tunning
-      command=`echo ${apCommand} | sed -e "s/NAME/${scName}/g"`
-      command=`echo ${command} | sed -e "s/COUNT/${pCount}/g"`
+     
+      # iniciando proceso no. X
+      echo "Starting ${scName} process "
       
-      screen -dmS ${scName}
+      # tunning
+      command=`echo ${apCommand} | sed -e "s/PARAM1/${scName}/g"`
+      command=`echo ${command} | sed -e "s/PARAM2/${apProcesses}/g"`
+      
+      #
+      screen -d -m -S ${scName}
       screen -r ${scName} -p 0 -X log off
-      screen -r ${scName} -p 0 -X logfile ~/log/${scName}-output.log
-      screen -r ${scName} -p 0 -X log on
+      screen -r ${scName} -p 0 -X logfile ${scLog}
       screen -r ${scName} -p 0 -X logfile flush 10
-      screen -r ${scName} -p 0 -X stuff "$(printf '%b' "echo ${command}\015")"
-      sleep 5
-
-      pCount=$((${pCount}+1))
-   done
-else
-   echo "Please, use ${apName}.start #ProcessesToStart"
+      screen -r ${scName} -p 0 -X log on
+      screen -r ${scName} -p 0 -X stuff "$(printf '%b' ". ${command}\015")"
+      
+      # another idea...
+      # ::create a new terminal
+      # screen -r ${scName} -X screen
+      # ::on the pCount terminal, execute the command required
+      # screen -r ${scName} -p ${pCount} -X stuff "$(printf '%b' ". ${command}\015")"
+   else
+      echo "Another instance is already running..."
+   fi
 fi
 
+# STOP
+if [ ${apAction} = "stop" ]
+then
+   echo "STOP"
+fi
+ 
