@@ -18,6 +18,11 @@ stty stop '^S'
 stty susp '^Z'
 stty werase '^W'
 
+# command line _eye candy_
+CCLEAR="\033[00m"; CWHITE="\033[01;37m"
+CRED="\033[01;31m"; CYELLOW="\033[01;33m"
+CBLUE="\033[01;34m"; CGRAY="\033[01;30m"
+
 # functions
 java15 () {
    PATH=/opt/java1.5/bin:${LOCALPATH}
@@ -39,16 +44,15 @@ newstyle () {
    # command line _eye candy_
    CCLEAR="\033[00m"; CWHITE="\033[01;37m"
    CRED="\033[01;31m"; CYELLOW="\033[01;33m"
+   CBLUE="\033[01;34m"; CGRAY="\033[01;30m"
 
-   #echo "PowerUsers Style!"
-   export PS1="$(echo "${CYELLOW}${USER}${CWHITE}@${IPLN}(${CRED}${HOST}${CWHITE})${CCLEAR}") \${PWD##*/} $ "
+   export PS1="$(echo "${CBLUE}${USER}${CWHITE}@${IPLN}(${CRED}${HOST}${CWHITE})${CCLEAR}") \${PWD##*/} $ "
    export PS2="  -> "
 }
 
 oldstyle () {
-   #echo "Hansel & Gretel Style!"
-   export PS1="$(echo "\n\${PWD}\n<${LOGNAME}@${HOST}>\n $> ")"
-   export PS2="  -> "
+   export PS1="$(echo "\n${CGRAY}${IPLN}(${HOST})${CCLEAR}:${CWHITE}\${PWD}\n${CBLUE}${USER}${CCLEAR}$> ")"
+   export PS2=" > "
 }
 
 #TODO
