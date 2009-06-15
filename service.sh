@@ -1,9 +1,12 @@
 #!/bin/sh 
-# vim: set ts=3 sw=3 sts=3 et si ai: 
+# vim: set ts=2 sw=2 sts=2 et si ai: 
+
+# service.sh -- put here a short description 
+# ---------------------------------------------------------------------------- 
+# (c) 2009 n|Code Labs.
+# Andrés Aquino Morales <andres.aquino@gmail.com> 
+# All rights reserved. 
 # 
-# service.sh -- meta service management application 
-# --------------------------------------------------------------------
-# (c) 2009 NEXTEL DE MEXICO
 
 # get application Name and Action
 apHome=/home/andresaquino/fromUSB/nextel.com.mx/soi.git
@@ -60,11 +63,11 @@ then
       
       #
       screen -d -m -S ${scName}
-      screen -r ${scName} -p 0 -X log off
-      screen -r ${scName} -p 0 -X logfile ${scLog}
-      screen -r ${scName} -p 0 -X logfile flush 10
-      screen -r ${scName} -p 0 -X log on
-      screen -r ${scName} -p 0 -X stuff "$(printf '%b' ". ${command}\015")"
+      screen -x ${scName} -p 0 -X log off
+      screen -x ${scName} -p 0 -X logfile ${scLog}
+      screen -x ${scName} -p 0 -X logfile flush 10
+      screen -x ${scName} -p 0 -X log on
+      screen -x ${scName} -p 0 -X stuff "$(printf '%b' ". ${command}\015")"
       
       # another idea...
       # ::create a new terminal
@@ -82,3 +85,6 @@ then
    echo "STOP"
 fi
  
+
+
+#

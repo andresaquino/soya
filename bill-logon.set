@@ -1,0 +1,22 @@
+#!/bin/sh
+# vim: set ts=3 sw=3 sts=3 et si ai:
+#
+# cms.start -- put here a short description
+# --------------------------------------------------------------------
+# (c) 2009 NEXTEL DE MEXICO
+
+INSTANCES=$1
+[ ${INSTANCES} ] && [ ${INSTANCES} -gt 1 2>/dev/null ] || INSTANCES=5
+
+COUNT=0
+while [ ${COUNT} -le ${INSTANCES} ]
+do
+  #
+  # BILL	
+  BILLNAME="BILL${COUNT}"
+  screen -x ${BILLNAME} -p 0 -X stuff "$(printf '%b' "log verbose\015")"
+  screen -x ${BILLNAME} -p 0 -X stuff "$(printf '%b' "log on\015")"
+  echo "${BILLNAME}  log verbose AND log on"
+  COUNT=$(($COUNT+1))
+done
+

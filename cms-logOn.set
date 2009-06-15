@@ -19,3 +19,9 @@ do
   COUNT=$(($COUNT+1))
 done
 
+# depurando directorio logs
+today=`date '+%b %e'`
+#cd ~/log/cms
+#ls -lrt | awk '!/${today}/{print "rm -f "$9}' 
+
+

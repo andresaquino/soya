@@ -5,28 +5,30 @@
 # --------------------------------------------------------------------
 # (c) 2009 NEXTEL DE MEXICO
 
-INSTANCES=$1
-[ ${INSTANCES} ] && [ ${INSTANCES} -gt 1 2>/dev/null ] || INSTANCES=3
+#INSTANCES=$1
+INSTANCES=`cat ~/AQUINO/.cms`
+[ ${INSTANCES} ] && [ ${INSTANCES} -gt 1 2>/dev/null ] || INSTANCES=5
 
 BACKUPDIR=`date '+%Y%m%d'`
 mkdir -p ~/log/${BACKUPDIR}
-
+HOST=`hostname  | cut -c 6-8`
 COUNT=0
 while [ ${COUNT} -le ${INSTANCES} ]
 do
   #
   # CMS
-  CMSNAME="CMS${COUNT}"
+  CMSNAME="${HOST}.CMS${COUNT}"
   if [ -e ~/log/${CMSNAME}-output.log ]
   then
      mv ~/log/${CMSNAME}-output.log ~/log/${BACKUPDIR}/${CMSNAME}.log.`date '+%H%M'`
   fi
+  CMS_PORT=$(($COUNT+1))
   screen -dmS ${CMSNAME}
   screen -r ${CMSNAME} -p 0 -X log off
   screen -r ${CMSNAME} -p 0 -X logfile ~/log/${CMSNAME}-output.log
   screen -r ${CMSNAME} -p 0 -X log on
   screen -r ${CMSNAME} -p 0 -X logfile flush 10
-  screen -r ${CMSNAME} -p 0 -X stuff "$(printf '%b' "sh ~/scripts/start_cms.sh -name ${CMSNAME}\015")"
+  screen -r ${CMSNAME} -p 0 -X stuff "$(printf '%b' "sh ~/scripts/start_cms.sh -name ${CMSNAME} -port 6110${CMS_PORT}\015")"
   sleep 9
   echo "CMS ${CMSNAME} initialized"
   COUNT=$(($COUNT+1))

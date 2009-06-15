@@ -6,10 +6,8 @@
 # (c) 2009 NEXTEL DE MEXICO
 
 #
-# eliminar instancia screen
+# primero instancias de screen
 screen -x NAMING -p 0 -X quit > /dev/null 2>&1 
-sleep 4
-ps -lfeax | grep -i naming | awk '{print "kill -9 "$3}' | sh
-sleep 4
+sleep 8
 echo "NAMING process finalized"
 
