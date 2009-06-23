@@ -8,7 +8,7 @@
 INSTANCES=$1
 [ ${INSTANCES} ] && [ ${INSTANCES} -gt 1 2>/dev/null ] || INSTANCES=5
 
-COUNT=0
+COUNT=1
 while [ ${COUNT} -le ${INSTANCES} ]
 do
   #
