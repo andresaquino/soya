@@ -7,19 +7,22 @@
 
 #
 # CX
-if [ -e ~/log/CX-output.log ]
+OPT=$1
+CXNAME="CX0${OPT}"
+
+if [ -e ~/log/${CXNAME}-output.log ]
 then
   BACKUPDIR=`date '+%Y%m%d'`
   mkdir -p ~/log/${BACKUPDIR}
-  mv ~/log/CX-output.log ~/log/${BACKUPDIR}/CX.log.`date '+%H%M'`
+  mv ~/log/${CXNAME}-output.log ~/log/${BACKUPDIR}/${CXNAME}.log.`date '+%H%M'`
 fi
 
-screen -dmS CX
-screen -r CX -p 0 -X log off
-screen -r CX -p 0 -X logfile ~/log/CX-output.log
-screen -r CX -p 0 -X log on
-screen -r CX -p 0 -X logfile flush 10
-screen -r CX -p 0 -X stuff "$(printf '%b' "sh $CATALINA_HOME/bin/catalina.sh run\015")"
+screen -dmS ${CXNAME}
+screen -r ${CXNAME} -p 0 -X log off
+screen -r ${CXNAME} -p 0 -X logfile ~/log/${CXNAME}-output.log
+screen -r ${CXNAME} -p 0 -X log on
+screen -r ${CXNAME} -p 0 -X logfile flush 10
+screen -r ${CXNAME} -p 0 -X stuff "$(printf '%b' "sh /bscs/bsccap/tomcat${OPT}/bin/catalina.sh run\015")"
 sleep 8
-echo "CX initialized"
+echo "${CXNAME} initialized"
 
