@@ -1,0 +1,4 @@
+vmd -r7 
+
+ps -e | grep vmd 
+

@@ -3,9 +3,9 @@
 
 # service.sh -- put here a short description 
 # ---------------------------------------------------------------------------- 
-# (c) 2009 n|Code Labs.
-# Andrés Aquino Morales <andres.aquino@gmail.com> 
-# All rights reserved. 
+# (c) 2009 Nextel de México S.A. de C.V.
+# Andrés Aquino Morales <andres.aquino@gmail.com>
+# All rights reserved.
 # 
 
 # get application Name and Action
