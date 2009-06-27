@@ -1,25 +1,14 @@
 #!/bin/sh 
 # vim: set ts=3 sw=3 sts=3 et si ai: 
 # 
-# bill.start -- put here a short description 
+# bill.stop -- put here a short description 
 # --------------------------------------------------------------------
 # (c) 2009 NEXTEL DE MEXICO
 
-INSTANCES=`cat ~/AQUINO/.bill`
-[ ${INSTANCES} ] && [ ${INSTANCES} -gt 1 2>/dev/null ] || INSTANCES=3
-
-COUNT=0
-while [ ${COUNT} -lt ${INSTANCES} ]
-do
-  #
-  # BILL
-  BILLNAME="BILL${COUNT}"
-
-  screen -x ${BILLNAME} -p 0 -X stuff "$(printf '%b' "exit\015")"
-  sleep 8
-  screen -x ${BILLNAME} -p 0 -X quit > /dev/null 2>&1
-  sleep 2
-  echo "BILL ${BILLNAME} initialized"
-  COUNT=$(($COUNT+1))
-done
+#
+# primero instancias de screen
+screen -r BILL -p 0 -X stuff "$(printf '%b' "exit\015")"
+sleep 8
+screen -r BILL -p 0 -X quit > /dev/null 2>&1 
+echo "BILL process finalized"
 

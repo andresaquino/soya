@@ -8,7 +8,7 @@
 #
 # CX
 CXNAME="CX00"
-CATALINA="${CATALINA_HOME}/bin/catalina.sh"
+CATALINA="/bscs/bsccap/tomcat/bin/catalina.sh"
 
 if [ -e ~/log/${CXNAME}-output.log ]
 then
@@ -18,11 +18,11 @@ then
 fi
 
 screen -dmS ${CXNAME}
-screen -r ${CXNAME} 0 -X log off
-screen -r ${CXNAME} 0 -X logfile ~/log/${CXNAME}-output.log
-screen -r ${CXNAME} 0 -X log on
-screen -r ${CXNAME} 0 -X logfile flush 10
-screen -r ${CXNAME} 0 -X stuff "$(printf '%b' "sh ${CATALINA} run\015")"
+screen -r ${CXNAME} -p 0 -X log off
+screen -r ${CXNAME} -p 0 -X logfile ~/log/${CXNAME}-output.log
+screen -r ${CXNAME} -p 0 -X log on
+screen -r ${CXNAME} -p 0 -X logfile flush 10
+screen -r ${CXNAME} -p 0 -X stuff "$(printf '%b' "sh ${CATALINA} run\015")"
 sleep 8
 echo " ${CXNAME} initialized"
 

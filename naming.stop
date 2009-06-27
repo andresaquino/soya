@@ -7,7 +7,8 @@
 
 #
 # primero instancias de screen
-screen -x NAMING -p 0 -X quit > /dev/null 2>&1 
+screen -r NAMING -p 0 -X quit > /dev/null 2>&1 
 sleep 8
+ps -lfeax | grep -i naming | awk '{print "kill -9 "$4}' | sort -nr | sh > /dev/null 2>&1
 echo "NAMING process finalized"
 

@@ -6,12 +6,12 @@
 # (c) 2009 NEXTEL DE MEXICO
 
 INSTANCES=$1
-[ ${INSTANCES} ] && [ ${INSTANCES} -gt 1 2>/dev/null ] || INSTANCES=4
+[ ${INSTANCES} ] && [ ${INSTANCES} -gt 1 2>/dev/null ] || INSTANCES=5
 
 BACKUPDIR=`date '+%Y%m%d'`
 mkdir -p ~/log/${BACKUPDIR}
 
-COUNT=0
+COUNT=3
 while [ ${COUNT} -lt ${INSTANCES} ]
 do
   #
@@ -28,9 +28,9 @@ do
   screen -r ${BILLNAME} -p 0 -X logfile flush 10
   screen -r ${BILLNAME} -p 0 -X stuff "$(printf '%b' "sh $BSCS_ROOT/scripts/startBillSrv.sh ${COUNT}\015")"
   sleep 9
-  echo "${BILLNAME} initialized"
+  echo "BILL ${BILLNAME} initialized"
   COUNT=$(($COUNT+1))
 done
 
-echo ${INSTANCES} > ~/AQUINO/.bill
+echo ${INSTANCES} > ~/AQUINO/.billinstances
 

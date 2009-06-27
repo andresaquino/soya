@@ -7,19 +7,22 @@
 
 #
 # CX
-if [ -e ~/log2/CX-output.log ]
+CXNAME="CX02"
+CATALINA="/bscs/bsccap/tomcat2/bin/catalina.sh"
+
+if [ -e ~/log/${CXNAME}-output.log ]
 then
   BACKUPDIR=`date '+%Y%m%d'`
-  mkdir -p ~/log2/${BACKUPDIR}
-  mv ~/log2/CX-output.log ~/log2/${BACKUPDIR}/CX.log.`date '+%H%M'`
+  mkdir -p ~/log/${BACKUPDIR}
+  mv ~/log/${CXNAME}-output.log ~/log/${BACKUPDIR}/CX.log.`date '+%H%M'`
 fi
 
-screen -dmS CX
-screen -r CX -p 0 -X log off
-screen -r CX -p 0 -X logfile ~/log2/CX-output.log
-screen -r CX -p 0 -X log on
-screen -r CX -p 0 -X logfile flush 10
-screen -r CX -p 0 -X stuff "$(printf '%b' "sh $CATALINA_HOME/bin/catalina.sh run\015")"
+screen -dmS ${CXNAME}
+screen -r ${CXNAME} -p 0 -X log off
+screen -r ${CXNAME} -p 0 -X logfile ~/log/${CXNAME}-output.log
+screen -r ${CXNAME} -p 0 -X log on
+screen -r ${CXNAME} -p 0 -X logfile flush 10
+screen -r ${CXNAME} -p 0 -X stuff "$(printf '%b' "sh ${CATALINA} run\015")"
 sleep 8
-echo "CX initialized"
+echo " ${CXNAME} initialized"
 

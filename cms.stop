@@ -5,20 +5,19 @@
 # --------------------------------------------------------------------
 # (c) 2009 NEXTEL DE MEXICO
 
-INSTANCES=`cat ~/AQUINO/.cms`
+INSTANCES=`cat ~/AQUINO/.instances`
 [ ${INSTANCES} ] && [ ${INSTANCES} -gt 1 2>/dev/null ] || INSTANCES=3
 
-COUNT=0
+COUNT=1
 while [ ${COUNT} -le ${INSTANCES} ]
 do
   #
   # CMS
-  CMSNAME="CMS${COUNT}"
-  screen -x ${CMSNAME} -p 0 -X stuff "$(printf '%b' "exit\015")"
+  screen -x CMS${COUNT} -p 0 -X stuff "$(printf '%b' "exit\015")"
   sleep 8
-  screen -x ${CMSNAME} -p 0 -X quit > /dev/null 2>&1
+  screen -x CMS${COUNT} -p 0 -X quit > /dev/null 2>&1
   sleep 2
-  echo "${CMSNAME} finalized"
+  echo "CMS CMS${COUNT} finalized"
   COUNT=$(($COUNT+1))
 done
 
