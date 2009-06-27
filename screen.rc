@@ -13,18 +13,18 @@ startup_message off
 vbell off
 msgwait 1
 hardstatus alwayslastline
-termcapinfo xterm* ti@:te@
+#termcapinfo xterm* ti@:te@
 altscreen on
 
 #
 # Log 10000 lines
-defscrollback 10000
+#defscrollback 10000
 
 # keybindings
 bindkey -k k3 prev								# F3  | Previous Window
 bindkey -k k4 next								# F4  | Next Window
-register r "^a:source $HOME/.screenrc"		#     | Goes with F5 definition
-bindkey -k k5 process r							# F5  | Reload profile
+register r "^a:source $HOME/.screenrc"						#     | Goes with F5 definition
+bindkey -k k5 process r								# F5  | Reload profile
 bindkey -k k6 detach								# F6  | Detach from this session
 
 # Window tabs, second to last line
