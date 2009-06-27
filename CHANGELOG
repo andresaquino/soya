@@ -1,0 +1,30 @@
+
+* 2009-06-26 aQzero <aqzero@gmail.com>
+     695bc7b: copias de servidores anteriores
+     020c39d: se validaron y son correctos
+
+* 2009-06-23 aQzero <aqzero@gmail.com>
+     ced3911: notas varias para manejar el screen
+     3bbde03: iniciar el COUNT en 1, no en ZERO...
+     312a7a6: publicados en el 12.171...
+     192d0e1: scripts de LHS, así como los cambios en service
+
+* 2009-06-15 aQzero <aqzero@gmail.com>
+     7935814: new files
+
+* 2009-06-01 aQzero <aqzero@gmail.com>
+     919fd90: cambios en profile...
+
+* 2009-05-31 Andres Aquino <andresaquino@chacharita.(none)>
+     3c7303a: aplicaciones que cambiaron en plataforma
+     dcdf45c: cambios en varias aplicaciones
+
+* 2009-05-13 aQzero <aqzero@gmail.com>
+     245d12c: Cambios a la gentoo
+     b565d40: cambios, adecuacion service.sh a la gentooo
+
+* 2009-05-04 Andres Aquino <andresaquino@chacharita.(none)>
+     2d07611: proof of concept, para verificar el comportamiento de service
+
+* 2009-04-29 Andres Aquino <andresaquino@chacharita.(none)>
+     8818e41: first release ..
