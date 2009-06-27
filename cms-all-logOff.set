@@ -14,14 +14,12 @@ do
   #
   # CMS
   CMSNAME="CMS${COUNT}"
-  screen -x ${CMSNAME} -p 0 -X stuff "$(printf '%b' "tracelog ALL\015")"
+  screen -x ${CMSNAME} -p 0 -X stuff "$(printf '%b' "tracelog OFF\015")"
   echo "${CMSNAME} set Tracelog ALL"
+  screen -x ${CMSNAME} -p 0 -X stuff "$(printf '%b' "databaselog OFF\015")"
+  echo "${CMSNAME} set DataBaseLog ALL"
+  screen -x ${CMSNAME} -p 0 -X stuff "$(printf '%b' "systemlog OFF\015")"
+  echo "${CMSNAME} set SystemLog ALL"  
   COUNT=$(($COUNT+1))
 done
-
-# depurando directorio logs
-today=`date '+%b %e'`
-#cd ~/log/cms
-#ls -lrt | awk '!/${today}/{print "rm -f "$9}' 
-
 

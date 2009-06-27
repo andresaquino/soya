@@ -1,38 +1,22 @@
-#!/bin/sh 
-# vim: set ts=2 sw=2 sts=2 et si ai: 
-
-# personal.profile -- profile unix de aplicaciones
-# ----------------------------------------------------------------------------
-# (c) 2009 Nextel de México S.A. de C.V.
-# Andrés Aquino Morales <andres.aquino@gmail.com>
-# All rights reserved.
+#!/bin/sh
+# vim: set ts=3 sw=3 sts=3 et si ai: 
 # 
+# personal.profile -- profile unix de aplicaciones
+# --------------------------------------------------------------------
+# (c) 2008 NEXTEL DE MEXICO
+# 
+# César Andrés Aquino <cesar.aquino@nextel.com.mx>
 
 # input mode
 set -o vi
-umask 0007
 
 # terminal line settings
-stty 2> /dev/null > /dev/null 
-if [ "$?" = "0" ]
-then
-   stty erase '^?'
-   stty intr '^C' 
-   stty kill '^U' 
-   stty stop '^S'
-   stty susp '^Z'
-   stty werase '^W'
-   
-   # command line _eye candy_
-   CCLEAR="\033[00m"; CWHITE="\033[01;37m"
-   CRED="\033[01;31m"; CYELLOW="\033[01;33m"
-   CBLUE="\033[01;34m"; CGRAY="\033[01;30m"
-else
-   # command line _eye candy_
-   CCLEAR=""; CWHITE=""
-   CRED=""; CYELLOW=""
-   CBLUE=""; CGRAY=""
-fi
+stty erase '^?'
+stty intr '^C' 
+stty kill '^U' 
+stty stop '^S'
+stty susp '^Z'
+stty werase '^W'
 
 # functions
 java15 () {
@@ -51,39 +35,26 @@ java12 () {
    PATH=/opt/java1.2/bin:${LOCALPATH}
 }
 
-localpaths () {
-   LPATH=
-
-   # for apache use
-   [ -d /opt/hpws/apache/bin ] && LPATH=/opt/hpws/apache/bin:${LPATH}
-
-   # for LHS applications
-   [ -d /bscs/bscs_sys/shared_tools ] && LPATH=/bscs/bscs_sys/shared_tools:${LPATH}
-
-   # binaries
-   [ -d /usr/local/bin ] && LPATH=/usr/local/bin:${LPATH}
-
-   # otros
-   [ -d ${BSCS_WORK}/PABLITO/SCRIPTS ] && LPATH=${BSCS_WORK}/PABLITO/SCRIPTS:${LPATH}
-
-   PATH=${LPATH}:${LOCALPATH}
-}
-
 newstyle () {
    # command line _eye candy_
    CCLEAR="\033[00m"; CWHITE="\033[01;37m"
    CRED="\033[01;31m"; CYELLOW="\033[01;33m"
-   CBLUE="\033[01;34m"; CGRAY="\033[01;30m"
 
-   export PS1="$(echo "${CBLUE}${USER}${CCLEAR}@[${CGRAY}${MYIP}(${HOST}${CCLEAR})]") \${PWD##*/} $> "
-   export PS2=" > "
+   #echo "PowerUsers Style!"
+   export PS1="$(echo "${CYELLOW}${USER}${CWHITE}@${IPLN}(${CRED}${HOST}${CWHITE})${CCLEAR}") \${PWD##*/} $ "
+   export PS2="  -> "
 }
 
 oldstyle () {
-   export PS1="$(echo "${CCLEAR}\n[${CGRAY}${MYIP}(${HOST})${CCLEAR}]:${CWHITE}\${PWD}\n${CBLUE}${USER}${CCLEAR} $> ")"
-   export PS2=" > "
+   #echo "Hansel & Gretel Style!"
+   export PS1="$(echo "\n\${PWD}\n<${LOGNAME}@${HOST}>\n $> ")"
+   export PS2="  -> "
 }
 
+#TODO
+# esto en HPUX se apendeja, probrecito sistema mierda:
+# cuando encolas dos procesos en una llamada se atonteja y se tarda en responder
+# JUAR JUAR JUAR JUAR ! ! ! !
 search () {
    STRING=$1
    FORE=`tput smso`
@@ -92,6 +63,10 @@ search () {
    
    grep ${STRING} | sed -e "s/${STRING}/${FORE}${STRING}${NORM}/g" | grep -v sed
 }
+
+# PATH
+# para ejecución de aplicaciones
+LOCALPATH=$HOME/bin:/usr/sbin:$PATH:/usr/local/bin:.
 
 # common alias
 alias ls='ls -F'
@@ -102,38 +77,23 @@ alias lr='lt -r'
 alias pw='pwd'
 alias domains='cd ~/bea/user_projects/domains'
 
+# Commands
+PING=`whereis ping | awk '{print $2}'`
+
 # terminal type
 export EDITOR=vi
 export TERM="xterm"
-export LANG=C
-
 # history file
-export HISTSIZE=500
+export HISTSIZE=300
 export HISTCONTROL=ignoredups
-
 # otros
-export HOSTNAME=`hostname`
-export HOST=`hostname | tr "[:upper:]" "[:lower:]" | sed -e "s/m.*hp//g"`
-export MANPATH=$HOME/monopse:$MANPATH
-
-unset USERNAME
-
-# specific host enviroment
-[ -e ~/${HOSTNAME}.profile ] && . ~/${HOSTNAME}.profile
-
-# PATH
-LOCALPATH=${HOME}/bin:/usr/sbin:${PATH}:.
-
 export PATH=${LOCALPATH}
-
-# get IP Address
-MYIP=`/usr/sbin/ping $(hostname) -c1 2> /dev/null | awk '/bytes from/{gsub(":","",$4);print $4}' `
-[ "x$MYIP" = "x" ] && MYIP=`echo $SSH_CONNECTION 2> /dev/null | awk '{print $3}' | sed -e "s/.*://g;s/ .*//g"`
-[ "x$MYIP" = "x" ] && MYIP=`/usr/sbin/ifconfig lan0 2> /dev/null | grep "inet" | sed -e "s/.*inet //g;s/netmask.*//g"`
-[ "x$MYIP" = "x" ] && MYIP=`/usr/sbin/ifconfig lan1 2> /dev/null | grep "inet" | sed -e "s/.*inet //g;s/netmask.*//g"`
+export HOST=`hostname | tr "[:upper:]" "[:lower:]" | sed -e "s/m.*hp//g"`
+export IPLN=`${PING} $(hostname) -c1 | awk '/bytes from/{gsub(":","",$4);print $4}' > /dev/null 2>&1`
+export MANPATH=$HOME/monopse:$MANPATH
+# 
+[ "$SSH_CONNECTION" != "" ] && IPLN=`echo $SSH_CONNECTION | cut -f3 -d" "`
 
 # Cursor and profile
-java14
 oldstyle
-localpaths
 

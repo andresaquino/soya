@@ -23,6 +23,3 @@ screen -r NAMING -p 0 -X stuff "$(printf '%b' "sh $HOME/scripts/startNamingServi
 sleep 8
 echo "NAMING initialized"
 
-# PATCH
-# es posible que el proceso quede residente en memoria, habra que eliminarlo
-

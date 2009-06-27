@@ -16,6 +16,12 @@ do
   CMSNAME="CMS${COUNT}"
   screen -x ${CMSNAME} -p 0 -X stuff "$(printf '%b' "tracelog ALL\015")"
   echo "${CMSNAME} set Tracelog ALL"
+  screen -x ${CMSNAME} -p 0 -X stuff "$(printf '%b' "databaselog ALL\015")"
+  echo "${CMSNAME} set DataBaseLog ALL"
+  screen -x ${CMSNAME} -p 0 -X stuff "$(printf '%b' "systemlog ALL\015")"
+  echo "${CMSNAME} set SystemLog ALL"
+
+
   COUNT=$(($COUNT+1))
 done
 
