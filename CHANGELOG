@@ -1,5 +1,6 @@
 
 * 2009-06-28 Andres Aquino <andres.aquino@gmail.com>
+     4d2443c: Eliminar archivos que no son utiles para el stable
      7f75cc5: desaparece personal.profile
      184cb3e: Se agrego nextel.profile, desaparece personal.profile
 

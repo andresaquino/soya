@@ -1,56 +1,50 @@
 #!/bin/sh 
 # vim: set ts=3 sw=3 sts=3 et si ai: 
-# 
-# lib-utils.sh -- library with some util functions
-# --------------------------------------------------------------------
-# Copyright (c) 2008 Andres Aquino <cesar.aquino@nextel.com.mx>
-# All rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions
-# are met:
-# 1. Redistributions of source code must retain the above copyright
-#    notice, this list of conditions and the following disclaimer.
-# 2. Redistributions in binary form must reproduce the above copyright
-#    notice, this list of conditions and the following disclaimer in the
-#    documentation and/or other materials provided with the distribution.
-# 3. Neither the name of copyright holders nor the names of its
-#    contributors may be used to endorse or promote products derived
-#    from this software without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
-# TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-# PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL COPYRIGHT HOLDERS OR CONTRIBUTORS
-# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-# POSSIBILITY OF SUCH DAMAGE.
 
-# "it's evolution baby ... " -- do the evolution @ pearl jam
-# see also http://github.com/aqzero/aptrigger
+# lib-utils.sh -- library with some util functions
+# ---------------------------------------------------------------------------- 
+# (c) 2009 Nextel de México S.A. de C.V.
+# Andrés Aquino Morales <andres.aquino@gmail.com>
+# All rights reserved.
+# 
 
 #
 # constants
 # initialize app enviroment
-_TYPESO="`uname -s`"
-_APPHOST=`hostname `
-_APPUSER=`id -u -n`
-_DATE=`date "+%Y%m%d"`
-_HOUR=`date "+%H%M"`
+systemSO="`uname -s`"
+appHost=`hostname `
+appUser=`id -u -n`
+appDate=`date "+%Y%m%d"`
+appHour=`date "+%H%M"`
 
 
 #
 # get the enviroment for the SO running
 get_enviroment () {
-   #
-   # profile
-   if [ ! -n "${PROFILE}" ]
+   # terminal line settings
+   stty 2> /dev/null > /dev/null 
+   if [ "$?" = "0" ]
    then
-      PROFILE="NoIT"
+	   stty erase '^?'
+	   stty intr '^C' 
+	   stty kill '^U' 
+	   stty stop '^S'
+	   stty susp '^Z'
+	   stty werase '^W'
+	   
+	   # command line _eye candy_
+	   CCLEAR="\033[00m"; CWHITE="\033[01;37m"
+	   CRED="\033[01;31m"; CYELLOW="\033[01;33m"
+	   CBLUE="\033[01;34m"; CGRAY="\033[01;30m"
+      appProfile=true
+
+   else
+	   # command line _eye candy_
+	   CCLEAR=""; CWHITE=""
+	   CRED=""; CYELLOW=""
+	   CBLUE=""; CGRAY=""
+      appProfile=false
+
    fi
 
    # nombre de la aplicacion
@@ -79,32 +73,7 @@ get_enviroment () {
       PROCPATH="${APPPATH}"
    fi
    
-   # checar si la envvar PROFILE esta definida, para indicar si se usan los 
-   # eye candy effects...
-   if [ "${PROFILE}" = "IT" ]
-   then
-      CCLEAR="\033[00m"
-      CGRAY="\033[01;30m"
-      CRED="\033[01;31m"
-      CGREEN="\033[01;32m"
-      CYELLOW="\033[01;33m"
-      CBLUE="\033[01;34m"
-      CPINK="\033[01;35m"
-      CCYAN="\033[01;36m"
-      CWHITE="\033[01;37m"
-   else
-      CCLEAR=""
-      CGRAY=""
-      CRED=""
-      CGREEN=""
-      CYELLOW=""
-      CBLUE=""
-      CPINK=""
-      CCYAN=""
-      CWHITE=""
-   fi
-
-   case "${_TYPESO}" in
+   case "${systemSO}" in
       "HP-UX")
          PSOPTS="-l -f -a -x -e"
          PSPOS=1
@@ -131,8 +100,8 @@ get_enviroment () {
          PSPOS=0
          ;;
    esac
-   #log_action "NOTICE" "Iniciando ${PROCNAME}, ${_TYPESO}"
-   log_action "NOTICE" "starting ${PROCNAME}, ${_TYPESO}"
+   #log_action "NOTICE" "Iniciando ${PROCNAME}, ${systemSO}"
+   log_action "NOTICE" "starting ${PROCNAME}, ${systemSO}"
 
 }
 
@@ -157,9 +126,9 @@ get_process_id () {
    mkdir -p ${PROCID}
 
    # extraer procesos existentes y filtrar las cadenas del archivo de configuracion
-   #log_action "NOTICE" "Buscando procesos ${WRDSLIST} propiedad de ${_APPUSER}"
-   log_action "NOTICE" "looking for process ${WRDSLIST} owned by ${_APPUSER}"
-   ps ${PSOPTS} | grep ${_APPUSER} > ${PSLIST}.1
+   #log_action "NOTICE" "Buscando procesos ${WRDSLIST} propiedad de ${appUser}"
+   log_action "NOTICE" "looking for process ${WRDSLIST} owned by ${appUser}"
+   ps ${PSOPTS} | grep ${appUser} > ${PSLIST}.1
    
    # extraer los procesos que nos interesan 
    awk "/${WRDSLIST}/{print}" ${PSLIST}.1 > ${PSLIST}
@@ -284,7 +253,7 @@ log_action () {
             report_status "OK" "${ACTION}"
             ;;
       esac 
-   echo "${MDATE} ${MTIME} ${_APPHOST} ${PROCNAME}[${PID}]: (${LEVEL}) ${ACTION}" >> ${APPLOG}.log
+   echo "${MDATE} ${MTIME} ${appHost} ${PROCNAME}[${PID}]: (${LEVEL}) ${ACTION}" >> ${APPLOG}.log
 
 }
 
@@ -304,7 +273,7 @@ report_status () {
    fi
 
    # si no es proceso con terminal
-   if [ ${PROFILE} != "IT" ]
+   if ! ${appProfile}
    then 
       echo "${MESSAGE} ..." | awk -v STATUS=${STATUS} '{print substr($0"                                                                           ",1,70),STATUS}'
    else
@@ -363,7 +332,7 @@ wait_for () {
    local GOON=true
    local WAITCHAR="-"
    
-   if [ "${PROFILE}" != "IT" ]
+   if ! ${appProfile}
    then
       TIMETO=${2}
       echo "${STATUS}"
@@ -390,20 +359,15 @@ wait_for () {
             # incrementar posicion, si es igual a 5 regresar al primer caracter 
             CHARPOS=$((${CHARPOS}+1))
             [ ${CHARPOS} -eq 5 ] && CHARPOS=1
-            perl -e 'select(undef,undef,undef,.2)'
+            perl -e 'select(undef,undef,undef,.1)'
             TIMETO=$((${TIMETO}-1))
             [ ${TIMETO} -eq 0 ] && GOON=false
          done
-         # limpiar linea de mensajes
-         tput rc 
-         tput cuu1
-         tput el
-      else
-         # limpiar linea de mensajes
-         tput rc 
-         tput cuu1
-         tput el
       fi
+      # limpiar linea de mensajes
+      tput rc 
+      tput cuu1
+      tput el
    fi
 
 }
@@ -434,9 +398,9 @@ wait_for () {
 #report_status "ERR" "Reinicio WebLogic 9.2 "
 
 # [ok] test para mostrar indicador de espera
-#get_enviroment
-#wait_for "Revisando el log de servicios " 10
-#wait_for "CLEAR"
+get_enviroment
+wait_for "Revisando el log de servicios " 5
+wait_for "CLEAR"
 #while (true)
 #do
 #   wait_for "STANDBY"

@@ -14,23 +14,23 @@ apDir=`dirname ${PWD}/${0}`
 apName=`basename ${0%.*}`
 apAction=`basename ${0#*.} | tr "[:upper:]" "[:lower:]"`
 apConf=${apDir}/${apName}.conf
-apProcesses=0                                               # by default, don't start any application
+apProcesses=0
 apAuthorized=false
 
 # move to application home directory
 cd ${apHome}
 
-# verify application
-[ ! -h ${0} ] && echo "hey!, use ln -sf service application-name.{start|stop}" && exit 1
-
 # read app config
 [ ! -e ${apConf} ] && echo "hey!, i need a config file like ${apConf}" && exit 1
 
-. utils.lib.sh
+# user application settings
 . ${apConf}
 
-# autorizada para levantar
-[ ${apAuthorized} ] || (echo "uhmmm, this is a bad idea..." && exit 1)
+# esta autorizada para iniciar
+[ ${apAuthorized} = false ] && echo "I need apAuthorized set to true in ${apConf}..." && exit 1
+
+# our library
+. utils.lib.sh
 
 # si se indico el numero de proceso a levantar
 [ ${1} ] && apProcesses=${1}
@@ -38,7 +38,7 @@ cd ${apHome}
 # START
 if [ ${apAction} = "start" ]
 then
-   # exite otra aplicacion?
+   # existe otra aplicacion?
    scName=`echo ${apName}${apProcesses} | tr "[:lower:]" "[:upper:]"`
    cnName=`screen -ls | grep ${scName} | wc -l`
    apLog="${apHome}/log/${scName}-output.log"
@@ -58,7 +58,7 @@ then
       echo "Starting ${scName} process "
       
       # tunning
-      command=`echo ${apCommand} | sed -e "s/PARAM1/${scName}/g"`
+      command=`echo ${apCommand} | sed -e "s/PARAMS/${scName}/g"`
       command=`echo ${command} | sed -e "s/PARAM2/${apProcesses}/g"`
       
       #
@@ -82,9 +82,15 @@ fi
 # STOP
 if [ ${apAction} = "stop" ]
 then
-   echo "STOP"
-fi
- 
+      screen -x ${scName} -p 0 -X log off
+      screen -x ${scName} -p 0 -X stuff "$(printf '%b' ". quit\015")"
+      sleep 10
+      
+      screen -x ${scName} -p 0 -X quit
+      sleep 2
+      
+      ps -lfeax | grep PROCESS
 
+fi
 
 #
