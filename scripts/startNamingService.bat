@@ -1,1 +1,0 @@
-%ACE_ROOT%\bin\Naming_Service -ORBEndPoint iiop://%1 -d

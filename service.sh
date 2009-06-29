@@ -83,13 +83,12 @@ fi
 if [ ${apAction} = "stop" ]
 then
       screen -x ${scName} -p 0 -X log off
-      screen -x ${scName} -p 0 -X stuff "$(printf '%b' ". quit\015")"
+      screen -x ${scName} -p 0 -X stuff "$(printf '%b' "exit\015")"
       sleep 10
       
-      screen -x ${scName} -p 0 -X quit
+      screen -x ${scName} -p 0 -X quit > /dev/null 2>&1
       sleep 2
-      
-      ps -lfeax | grep PROCESS
+      echo "${scName} finalized"
 
 fi
 

@@ -1,1 +1,0 @@
-ps -eaf | grep vmd | awk '{print $2}' | xargs kill
