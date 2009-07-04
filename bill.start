@@ -5,32 +5,38 @@
 # --------------------------------------------------------------------
 # (c) 2009 NEXTEL DE MEXICO
 
-INSTANCES=$1
-[ ${INSTANCES} ] && [ ${INSTANCES} -gt 1 2>/dev/null ] || INSTANCES=4
-
 BACKUPDIR=`date '+%Y%m%d'`
 mkdir -p ~/log/${BACKUPDIR}
 
-COUNT=0
-while [ ${COUNT} -lt ${INSTANCES} ]
-do
-  #
-  # BILL
-  BILLNAME="BILL${COUNT}"
-  if [ -e ~/log/${BILLNAME}-output.log ]
-  then
-     mv ~/log/${BILLNAME}-output.log ~/log/${BACKUPDIR}/${BILLNAME}.log.`date '+%H%M'`
-  fi
-  screen -dmS ${BILLNAME}
-  screen -r ${BILLNAME} -p 0 -X log off
-  screen -r ${BILLNAME} -p 0 -X logfile ~/log/${BILLNAME}-output.log
-  screen -r ${BILLNAME} -p 0 -X log on
-  screen -r ${BILLNAME} -p 0 -X logfile flush 10
-  screen -r ${BILLNAME} -p 0 -X stuff "$(printf '%b' "sh $BSCS_ROOT/scripts/startBillSrv.sh ${COUNT}\015")"
-  sleep 9
-  echo "${BILLNAME} initialized"
-  COUNT=$(($COUNT+1))
-done
+# si se indico el numero de proceso a levantar
+apProcesses=`echo $0 | sed -e "s/[a-zA-Z\.]//g"`
 
-echo ${INSTANCES} > ~/AQUINO/.bill
+# autorizada para levantar
+[ "x${apProcesses}" = "x" ] && echo "uhmmm, it's a bad idea..." && exit 1
+
+# TODO
+# aqui hay que estructurar el nombre del SCREEN para que quede de la siguiente manera:
+# screen length name = ABCDEFGH = 8
+# HOST + ____ + ID PROCESO + NUMERO DE PROCESO
+# HOST: 4 char
+# IDPR: 2 char CM,CMS BI,BILL NM,NAMING FF,FEDFACTORY CX,CX
+# NUMP: 2 char
+# IT6_CX01
+TYPE=
+SCRNAME=`echo "$(echo "${HOST}____" | cut -c 1-4)${TYPE}$(echo "0${apProcess}")" | tr "[:lower:]" "[:upper:]"`
+
+#if [ -e ~/log/${SCRNAME}-output.log ]
+#then
+#   mv ~/log/${SCRNAME}-output.log ~/log/${BACKUPDIR}/${SCRNAME}.log.`date '+%H%M'`
+#fi
+
+#
+screen -dmS ${SCRNAME}
+screen -r ${SCRNAME} -p 0 -X log off
+#screen -r ${SCRNAME} -p 0 -X logfile ~/log/${SCRNAME}-output.log
+#screen -r ${SCRNAME} -p 0 -X log on
+#screen -r ${SCRNAME} -p 0 -X logfile flush 10
+#screen -r ${SCRNAME} -p 0 -X stuff "$(printf '%b' "sh $BSCS_ROOT/scripts/startBillSrv.sh ${apProcesses}\015")"
+sleep 9
+echo "${SCRNAME} initialized"
 
