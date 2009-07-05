@@ -1,4 +1,15 @@
 
+* 2009-07-04 Andres Aquino <andres.aquino@gmail.com>
+     c647ff4: ready, el primer stable !
+     9aa34bd: utils.lib.sh to libutils.sh
+     0fdcd39: service.conf to soya.conf
+     61a7b17: cambio service.sh to soya.sh
+     e6c8a90: se determina la construccion del nombre
+
+* 2009-06-29 Andres Aquino <andres.aquino@gmail.com>
+     99f4eeb: borrado de directorio scrips así como archivos no utiles
+     3819da2: depurando archivos que no son utiles para el Stable
+
 * 2009-06-28 Andres Aquino <andres.aquino@gmail.com>
      4d2443c: Eliminar archivos que no son utiles para el stable
      7f75cc5: desaparece personal.profile

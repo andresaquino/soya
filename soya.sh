@@ -26,6 +26,9 @@ cd ${apHome}
 . libutils.sh
 . ${apName}.conf
 
+#
+get_enviroment
+
 # virtual terminal name
 scrPrcs=`echo $0 | sed -e "s/[a-zA-Z\.]//g"`
 [ "x${scrPrcs}" != "x" ] && scrPrcs="0${scrPrcs}"
@@ -35,10 +38,9 @@ scrName="${scrName}${apType}${scrPrcs}"
 # START
 if [ ${apAction} = "start" ]
 then
-  
    # si no hay otro proceso
    screen -ls | grep ${scrName} > /dev/null 2>&1
-   [ "x$?" = "x0" ] && echo "Another ${scrName} virtual terminal process exist!" && exit 1 
+   [ "x$?" = "x0" ] && log_action "ERR" "Another ${scrName} virtual terminal process exist!" && exit 1 
    
    # backup
    apLog="${apHome}/log/${apName}"
@@ -47,16 +49,17 @@ then
 
    #
    . ${apName}.conf
-   echo "Starting ${scrName} virtual terminal "
    screen -d -m -S ${scrName}
    screen -r ${scrName} -p 0 -X log off
    screen -r ${scrName} -p 0 -X logfile ${apLog}.log
    screen -r ${scrName} -p 0 -X logfile flush 10
    screen -r ${scrName} -p 0 -X log on
+   wait_for "Starting ${scrName} virtual terminal " 6
    
    #
-   echo "Starting process"
    screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "${apCommand}\015")"
+   wait_for "Starging process " 8
+   report_status "OK" "Process ${apType} running in background "
 
 fi
 
@@ -67,17 +70,15 @@ then
    screen -ls | grep ${scrName} > /dev/null 2>&1
    if [ "x$?" != "x0" ] 
    then
-      echo "OMFG...! Nothing to stop man."
+      log_action "ERR" "OMFG...! Nothing to stop man. "
       exit 1
    else
-      echo "Stoping process"
       screen -r ${scrName} -p 0 -X log off
       screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "exit\015")"
-      sleep 10
+      wait_for "Stoping process " 12
       
       screen -x ${scrName} -p 0 -X quit > /dev/null 2>&1
-      sleep 2
-      echo "${scrName} finalized"
+      report_status "OK" "Process ${scrName} finalized "
    fi
 
 fi
