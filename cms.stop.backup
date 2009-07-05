@@ -1,0 +1,24 @@
+#!/bin/sh 
+# vim: set ts=3 sw=3 sts=3 et si ai: 
+# 
+# cms.stop -- put here a short description 
+# --------------------------------------------------------------------
+# (c) 2009 NEXTEL DE MEXICO
+
+INSTANCES=`cat ~/AQUINO/.cms`
+[ ${INSTANCES} ] && [ ${INSTANCES} -gt 1 2>/dev/null ] || INSTANCES=3
+
+COUNT=0
+while [ ${COUNT} -le ${INSTANCES} ]
+do
+  #
+  # CMS
+  CMSNAME="CMS${COUNT}"
+  screen -x ${CMSNAME} -p 0 -X stuff "$(printf '%b' "exit\015")"
+  sleep 8
+  screen -x ${CMSNAME} -p 0 -X quit > /dev/null 2>&1
+  sleep 2
+  echo "${CMSNAME} finalized"
+  COUNT=$(($COUNT+1))
+done
+

@@ -1,25 +1,37 @@
 #!/bin/sh 
-# vim: set ts=3 sw=3 sts=3 et si ai: 
-# 
+# vim: set ts=2 sw=2 sts=2 et si ai: 
+
 # cx.start -- put here a short description 
-# --------------------------------------------------------------------
-# (c) 2009 NEXTEL DE MEXICO
+# ----------------------------------------------------------------------------
+# (c) 2009 Nextel de México S.A. de C.V.
+# Andrés Aquino Morales <andres.aquino@gmail.com>
+# All rights reserved.
+# 
+
+BACKUPDIR=`date '+%Y%m%d'`
+mkdir -p ~/log/${BACKUPDIR}
+
+# si se indico el numero de proceso a levantar
+apProcess=`echo $0 | sed -e "s/[a-zA-Z\.]//g"`
+
+# autorizada para levantar
+[ "x${apProcess}" = "x" ] && echo "uhmmm, it's a bad idea..." && exit 1
 
 #
-# CX
-if [ -e ~/log/CX-output.log ]
+# SCRNAME
+SCRNAME="CX${apProcess}"
+CATALINA="/bscs/bsccap/tomcat${apProcess}/bin/catalina.sh"
+if [ -e ~/log/${SCRNAME}-output.log ]
 then
-  BACKUPDIR=`date '+%Y%m%d'`
-  mkdir -p ~/log/${BACKUPDIR}
-  mv ~/log/CX-output.log ~/log/${BACKUPDIR}/CX.log.`date '+%H%M'`
+  mv ~/log/${SCRNAME}-output.log ~/log/${BACKUPDIR}/${SCRNAME}.log.`date '+%H%M'`
 fi
 
-screen -dmS CX
-screen -r CX -p 0 -X log off
-screen -r CX -p 0 -X logfile ~/log/CX-output.log
-screen -r CX -p 0 -X log on
-screen -r CX -p 0 -X logfile flush 10
-screen -r CX -p 0 -X stuff "$(printf '%b' "sh $CATALINA_HOME/bin/catalina.sh run\015")"
-sleep 8
-echo "CX initialized"
+screen -dmS ${SCRNAME}
+screen -r ${SCRNAME} -p 0 -X log off
+screen -r ${SCRNAME} -p 0 -X logfile ~/log/${SCRNAME}-output.log
+screen -r ${SCRNAME} -p 0 -X log on
+screen -r ${SCRNAME} -p 0 -X logfile flush 10
+screen -r ${SCRNAME} -p 0 -X stuff "$(printf '%b' "sh ${CATALINA} run\015")"
+sleep 9
+echo "${SCRNAME} initialized"
 

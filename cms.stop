@@ -1,22 +1,25 @@
 #!/bin/sh 
-# vim: set ts=3 sw=3 sts=3 et si ai: 
-# 
+# vim: set ts=2 sw=2 sts=2 et si ai: 
+
 # cms.stop -- put here a short description 
-# --------------------------------------------------------------------
-# (c) 2009 NEXTEL DE MEXICO
+# ----------------------------------------------------------------------------
+# (c) 2009 Nextel de México S.A. de C.V.
+# Andrés Aquino Morales <andres.aquino@gmail.com>
+# All rights reserved.
+# 
 
 # si se indico el numero de proceso a levantar
-apProcesses=`echo $0 | sed -e "s/[a-zA-Z\.]//g"`
+apProcess=`echo $0 | sed -e "s/[a-zA-Z\.]//g"`
 
 # autorizada para levantar
-[ "x${apProcesses}" = "x" ] && echo "uhmmm, it's a bad idea..." && exit 1
+[ "x${apProcess}" = "x" ] && echo "uhmmm, it's a bad idea..." && exit 1
 
 #
 # CMS
-CMSNAME="CMS${apProcesses}"
-screen -x ${CMSNAME} -p 0 -X stuff "$(printf '%b' "exit\015")"
+SCRNAME="CMS${apProcess}"
+screen -x ${SCRNAME} -p 0 -X stuff "$(printf '%b' "exit\015")"
 sleep 8
-screen -x ${CMSNAME} -p 0 -X quit > /dev/null 2>&1
+screen -x ${SCRNAME} -p 0 -X quit > /dev/null 2>&1
 sleep 2
-echo "${CMSNAME} finalized"
+echo "${SCRNAME} finalized"
 

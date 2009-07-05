@@ -1,33 +1,36 @@
 #!/bin/sh 
-# vim: set ts=3 sw=3 sts=3 et si ai: 
-# 
+# vim: set ts=2 sw=2 sts=2 et si ai: 
+
 # cms.start -- put here a short description 
-# --------------------------------------------------------------------
-# (c) 2009 NEXTEL DE MEXICO
+# ----------------------------------------------------------------------------
+# (c) 2009 Nextel de México S.A. de C.V.
+# Andrés Aquino Morales <andres.aquino@gmail.com>
+# All rights reserved.
+# 
 
 BACKUPDIR=`date '+%Y%m%d'`
 mkdir -p ~/log/${BACKUPDIR}
 
 # si se indico el numero de proceso a levantar
-apProcesses=`echo $0 | sed -e "s/[a-zA-Z\.]//g"`
+apProcess=`echo $0 | sed -e "s/[a-zA-Z\.]//g"`
 
 # autorizada para levantar
-[ "x${apProcesses}" = "x" ] && echo "uhmmm, it's a bad idea..." && exit 1
+[ "x${apProcess}" = "x" ] && echo "uhmmm, it's a bad idea..." && exit 1
 
 #
 # CMS
-CMSNAME="CMS${apProcesses}"
-if [ -e ~/log/${CMSNAME}-output.log ]
+SCRNAME="CMS${apProcess}"
+if [ -e ~/log/${SCRNAME}-output.log ]
 then
-  mv ~/log/${CMSNAME}-output.log ~/log/${BACKUPDIR}/${CMSNAME}.log.`date '+%H%M'`
+  mv ~/log/${SCRNAME}-output.log ~/log/${BACKUPDIR}/${SCRNAME}.log.`date '+%H%M'`
 fi
 
-screen -dmS ${CMSNAME}
-screen -r ${CMSNAME} -p 0 -X log off
-screen -r ${CMSNAME} -p 0 -X logfile ~/log/${CMSNAME}-output.log
-screen -r ${CMSNAME} -p 0 -X log on
-screen -r ${CMSNAME} -p 0 -X logfile flush 10
-screen -r ${CMSNAME} -p 0 -X stuff "$(printf '%b' "sh ~/scripts/start_cms.sh -name ${CMSNAME}\015")"
+screen -dmS ${SCRNAME}
+screen -r ${SCRNAME} -p 0 -X log off
+screen -r ${SCRNAME} -p 0 -X logfile ~/log/${SCRNAME}-output.log
+screen -r ${SCRNAME} -p 0 -X log on
+screen -r ${SCRNAME} -p 0 -X logfile flush 10
+screen -r ${SCRNAME} -p 0 -X stuff "$(printf '%b' "sh ~/scripts/start_cms.sh -name ${SCRNAME}\015")"
 sleep 9
-echo "CMS ${CMSNAME} initialized"
+echo "${SCRNAME} initialized"
 

@@ -1,29 +1,21 @@
-Orden de Ejecucion BSCSiX
-==
-1.naming service
-2.federate factory
-3.billing service
-3.cms
-4.cx
+SOYA
+SOI Applications
+--
 
 
-Listado de Servicios
-==
-Naming Service:
----------
-  com: naming context
-    lhs: naming context
-      public: naming context
-        soi: naming context
-          fedfactory1: object reference:   Protocol: IIOP,   Endpoint: 10.103.12.135:53226
-      private: naming context
-        soi: naming context
-          billsrv: naming context
-             0: object reference:   Protocol: IIOP,   Endpoint: mxhpit11:50499
-          CMS0: object reference:   Protocol: IIOP,   Endpoint: 10.103.12.135:53243
-          CMS1: object reference:   Protocol: IIOP,   Endpoint: 10.103.12.135:53266
-          CMS2: object reference:   Protocol: IIOP,   Endpoint: 10.103.12.135:53284
-          CMS3: object reference:   Protocol: IIOP,   Endpoint: 10.103.12.135:53295
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # service.sh README 
 # ---------------------------------------------------------------------------- 

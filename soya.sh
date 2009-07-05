@@ -1,7 +1,7 @@
 #!/bin/sh 
 # vim: set ts=2 sw=2 sts=2 et si ai: 
 
-# service.sh -- put here a short description 
+# soya.sh -- put here a short description 
 # ---------------------------------------------------------------------------- 
 # (c) 2009 Nextel de México S.A. de C.V.
 # Andrés Aquino Morales <andres.aquino@gmail.com>
@@ -9,28 +9,21 @@
 # 
 
 # get application Name and Action
-apHome=/home/andresaquino/fromUSB/nextel.com.mx/soi.git
+apHome=/home/andresaquino/fromUSB/nextel.com.mx/soya.git
 apDir=`dirname ${PWD}/${0}`
 apName=`basename ${0%.*}`
 apAction=`basename ${0#*.} | tr "[:upper:]" "[:lower:]"`
-apConf=${apDir}/${apName}.conf
-apProcesses=0
-apAuthorized=false
+apProcess=
 
 # move to application home directory
 cd ${apHome}
 
-# read app config
-[ ! -e ${apConf} ] && echo "hey!, i need a config file like ${apConf}" && exit 1
+# i need a config file...
+[ ! -e soya.conf ] && echo "hey!, i need a config file like soya.conf" && exit 1
 
-# user application settings
-. ${apConf}
-
-# esta autorizada para iniciar
-[ ${apAuthorized} = false ] && echo "I need apAuthorized set to true in ${apConf}..." && exit 1
-
-# our library
-. utils.lib.sh
+# settings, setup & libraries
+. soya.conf
+. libutils.sh
 
 # si se indico el numero de proceso a levantar
 [ ${1} ] && apProcesses=${1}
@@ -61,19 +54,16 @@ then
       command=`echo ${apCommand} | sed -e "s/PARAMS/${scName}/g"`
       command=`echo ${command} | sed -e "s/PARAM2/${apProcesses}/g"`
       
+
+      scrName=`echo "$(echo "${HOST}____" | cut -c 1-4)${TYPE}$(echo "0${apProcess}")" | tr "[:lower:]" "[:upper:]"`
       #
       screen -d -m -S ${scName}
-      screen -x ${scName} -p 0 -X log off
-      screen -x ${scName} -p 0 -X logfile ${scLog}
-      screen -x ${scName} -p 0 -X logfile flush 10
-      screen -x ${scName} -p 0 -X log on
-      screen -x ${scName} -p 0 -X stuff "$(printf '%b' ". ${command}\015")"
+      screen -r ${scName} -p 0 -X log off
+      screen -r ${scName} -p 0 -X logfile ${scLog}
+      screen -r ${scName} -p 0 -X logfile flush 10
+      screen -r ${scName} -p 0 -X log on
+      screen -r ${scName} -p 0 -X stuff "$(printf '%b' ". ${command}\015")"
       
-      # another idea...
-      # ::create a new terminal
-      # screen -r ${scName} -X screen
-      # ::on the pCount terminal, execute the command required
-      # screen -r ${scName} -p ${pCount} -X stuff "$(printf '%b' ". ${command}\015")"
    else
       echo "Another instance is already running..."
    fi
@@ -82,8 +72,8 @@ fi
 # STOP
 if [ ${apAction} = "stop" ]
 then
-      screen -x ${scName} -p 0 -X log off
-      screen -x ${scName} -p 0 -X stuff "$(printf '%b' "exit\015")"
+      screen -r ${scName} -p 0 -X log off
+      screen -r ${scName} -p 0 -X stuff "$(printf '%b' "exit\015")"
       sleep 10
       
       screen -x ${scName} -p 0 -X quit > /dev/null 2>&1

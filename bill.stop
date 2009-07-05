@@ -5,21 +5,18 @@
 # --------------------------------------------------------------------
 # (c) 2009 NEXTEL DE MEXICO
 
-INSTANCES=`cat ~/AQUINO/.bill`
-[ ${INSTANCES} ] && [ ${INSTANCES} -gt 1 2>/dev/null ] || INSTANCES=3
+# si se indico el numero de proceso a levantar
+apProcesses=`echo $0 | sed -e "s/[a-zA-Z\.]//g"`
 
-COUNT=0
-while [ ${COUNT} -lt ${INSTANCES} ]
-do
-  #
-  # BILL
-  BILLNAME="BILL${COUNT}"
+# autorizada para levantar
+[ "x${apProcesses}" = "x" ] && echo "uhmmm, it's a bad idea..." && exit 1
 
-  screen -x ${BILLNAME} -p 0 -X stuff "$(printf '%b' "exit\015")"
-  sleep 8
-  screen -x ${BILLNAME} -p 0 -X quit > /dev/null 2>&1
-  sleep 2
-  echo "BILL ${BILLNAME} initialized"
-  COUNT=$(($COUNT+1))
-done
+#
+# BILL
+SCRNAME=`echo "BILL${HOST}${apProcesses}" | tr "[:lower:]" "[:upper:]"`
+screen -x ${SCRNAME} -p 0 -X stuff "$(printf '%b' "exit\015")"
+sleep 8
+screen -x ${SCRNAME} -p 0 -X quit > /dev/null 2>&1
+sleep 2
+echo "${SCRNAME} finalized"
 
