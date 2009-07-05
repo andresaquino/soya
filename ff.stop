@@ -1,14 +1,1 @@
-#!/bin/sh 
-# vim: set ts=3 sw=3 sts=3 et si ai: 
-# 
-# ff.stop -- put here a short description 
-# --------------------------------------------------------------------
-# (c) 2009 NEXTEL DE MEXICO
-
-#
-# primero instancias de screen
-screen -x FF -p 0 -X stuff "$(printf '%b' "exit\015")"
-sleep 8
-screen -x FF -p 0 -X quit > /dev/null 2>&1 
-echo "FF process finalized"
-
+soya.sh

@@ -1,0 +1,8 @@
+sh ~/scripts/start_cms.sh -name MARTCM01
+[00m
+[[01;30m10.103.22.30(martiniana)[00m]:[01;37m/media/DELL/nextel.com.mx/soya.git[01;31m [v0.1Stable]
+[01;34mandresaquino[00m$> sh ~/scripts/start_cms.sh -name MARTCM01
+sh: Can't open /home/andresaquino/scripts/start_cms.sh
+[00m
+[[01;30m10.103.22.30(martiniana)[00m]:[01;37m/media/DELL/nextel.com.mx/soya.git[01;31m [v0.1Stable]
+[01;34mandresaquino[00m$> [K[01;34mandresaquino[00m$> [K[01;34mandresaquino[00m$> xit

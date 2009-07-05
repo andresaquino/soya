@@ -1,13 +1,1 @@
-#!/bin/sh 
-# vim: set ts=3 sw=3 sts=3 et si ai: 
-# 
-# naming.stop -- put here a short description 
-# --------------------------------------------------------------------
-# (c) 2009 NEXTEL DE MEXICO
-
-#
-# primero instancias de screen
-screen -x NAMING -p 0 -X quit > /dev/null 2>&1 
-sleep 8
-echo "NAMING process finalized"
-
+soya.sh

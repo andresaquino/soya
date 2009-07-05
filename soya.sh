@@ -1,5 +1,5 @@
 #!/bin/sh 
-# vim: set ts=2 sw=2 sts=2 et si ai: 
+# vim: set ts=3 sw=3 sts=3 et si ai: 
 
 # soya.sh -- put here a short description 
 # ---------------------------------------------------------------------------- 
@@ -9,76 +9,76 @@
 # 
 
 # get application Name and Action
-apHome=/home/andresaquino/fromUSB/nextel.com.mx/soya.git
+apHome=/media/DELL/nextel.com.mx/soya.git
 apDir=`dirname ${PWD}/${0}`
-apName=`basename ${0%.*}`
 apAction=`basename ${0#*.} | tr "[:upper:]" "[:lower:]"`
-apProcess=
+apName=`basename ${0%.*}`
 
 # move to application home directory
 cd ${apHome}
 
 # i need a config file...
 [ ! -e soya.conf ] && echo "hey!, i need a config file like soya.conf" && exit 1
+[ ! -e ${apName}.conf ] && echo "hey!, i need a config file like ${apName}.conf" && exit 1
 
 # settings, setup & libraries
 . soya.conf
 . libutils.sh
+. ${apName}.conf
 
-# si se indico el numero de proceso a levantar
-[ ${1} ] && apProcesses=${1}
-
+# virtual terminal name
+scrPrcs=`echo $0 | sed -e "s/[a-zA-Z\.]//g"`
+[ "x${scrPrcs}" != "x" ] && scrPrcs="0${scrPrcs}"
+scrName=`echo "$(echo "${apHost}____" | cut -c 1-4)" | tr "[:lower:]" "[:upper:]"`
+scrName="${scrName}${apType}${scrPrcs}"
+ 
 # START
 if [ ${apAction} = "start" ]
 then
-   # existe otra aplicacion?
-   scName=`echo ${apName}${apProcesses} | tr "[:lower:]" "[:upper:]"`
-   cnName=`screen -ls | grep ${scName} | wc -l`
-   apLog="${apHome}/log/${scName}-output.log"
-   
+  
    # si no hay otro proceso
-   if [ ${cnName} -eq 0 ]
-   then
-      if [ ${apProcesses} -ge 0 2>/dev/null ]
-      then
-         # backup
-         apBackup=`date '+%Y%m%d'`
-         mkdir -p ${apHome}/log/${apBackup}
-         mv ${apLog} ${apHome}/log/${apBackup}/${scName}-output.log.`date '+%H%M'`
-      fi
-     
-      # iniciando proceso no. X
-      echo "Starting ${scName} process "
-      
-      # tunning
-      command=`echo ${apCommand} | sed -e "s/PARAMS/${scName}/g"`
-      command=`echo ${command} | sed -e "s/PARAM2/${apProcesses}/g"`
-      
+   screen -ls | grep ${scrName} > /dev/null 2>&1
+   [ "x$?" = "x0" ] && echo "Another ${scrName} virtual terminal process exist!" && exit 1 
+   
+   # backup
+   apLog="${apHome}/log/${apName}"
+   mkdir -p ${apHome}/log/${apDate}
+   mv ${apLog}.log ${apHome}/log/${apDate}/${scrName}.log.`date '+%H%M'` > /dev/null 2>&1
 
-      scrName=`echo "$(echo "${HOST}____" | cut -c 1-4)${TYPE}$(echo "0${apProcess}")" | tr "[:lower:]" "[:upper:]"`
-      #
-      screen -d -m -S ${scName}
-      screen -r ${scName} -p 0 -X log off
-      screen -r ${scName} -p 0 -X logfile ${scLog}
-      screen -r ${scName} -p 0 -X logfile flush 10
-      screen -r ${scName} -p 0 -X log on
-      screen -r ${scName} -p 0 -X stuff "$(printf '%b' ". ${command}\015")"
-      
-   else
-      echo "Another instance is already running..."
-   fi
+   #
+   . ${apName}.conf
+   echo "Starting ${scrName} virtual terminal "
+   screen -d -m -S ${scrName}
+   screen -r ${scrName} -p 0 -X log off
+   screen -r ${scrName} -p 0 -X logfile ${apLog}.log
+   screen -r ${scrName} -p 0 -X logfile flush 10
+   screen -r ${scrName} -p 0 -X log on
+   
+   #
+   echo "Starting process"
+   screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "${apCommand}\015")"
+
 fi
 
 # STOP
 if [ ${apAction} = "stop" ]
 then
-      screen -r ${scName} -p 0 -X log off
-      screen -r ${scName} -p 0 -X stuff "$(printf '%b' "exit\015")"
+   # si no hay otro proceso
+   screen -ls | grep ${scrName} > /dev/null 2>&1
+   if [ "x$?" != "x0" ] 
+   then
+      echo "OMFG...! Nothing to stop man."
+      exit 1
+   else
+      echo "Stoping process"
+      screen -r ${scrName} -p 0 -X log off
+      screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "exit\015")"
       sleep 10
       
-      screen -x ${scName} -p 0 -X quit > /dev/null 2>&1
+      screen -x ${scrName} -p 0 -X quit > /dev/null 2>&1
       sleep 2
-      echo "${scName} finalized"
+      echo "${scrName} finalized"
+   fi
 
 fi
 

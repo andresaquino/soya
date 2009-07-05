@@ -12,10 +12,10 @@
 # constants
 # initialize app enviroment
 systemSO="`uname -s`"
-appHost=`hostname `
-appUser=`id -u -n`
-appDate=`date "+%Y%m%d"`
-appHour=`date "+%H%M"`
+apHost=`hostname `
+apUser=`id -u -n`
+apDate=`date "+%Y%m%d"`
+apHour=`date "+%H%M"`
 
 
 #
@@ -126,9 +126,9 @@ get_process_id () {
    mkdir -p ${PROCID}
 
    # extraer procesos existentes y filtrar las cadenas del archivo de configuracion
-   #log_action "NOTICE" "Buscando procesos ${WRDSLIST} propiedad de ${appUser}"
-   log_action "NOTICE" "looking for process ${WRDSLIST} owned by ${appUser}"
-   ps ${PSOPTS} | grep ${appUser} > ${PSLIST}.1
+   #log_action "NOTICE" "Buscando procesos ${WRDSLIST} propiedad de ${apUser}"
+   log_action "NOTICE" "looking for process ${WRDSLIST} owned by ${apUser}"
+   ps ${PSOPTS} | grep ${apUser} > ${PSLIST}.1
    
    # extraer los procesos que nos interesan 
    awk "/${WRDSLIST}/{print}" ${PSLIST}.1 > ${PSLIST}
@@ -253,7 +253,7 @@ log_action () {
             report_status "OK" "${ACTION}"
             ;;
       esac 
-   echo "${MDATE} ${MTIME} ${appHost} ${PROCNAME}[${PID}]: (${LEVEL}) ${ACTION}" >> ${APPLOG}.log
+   echo "${MDATE} ${MTIME} ${apHost} ${PROCNAME}[${PID}]: (${LEVEL}) ${ACTION}" >> ${APPLOG}.log
 
 }
 
@@ -398,9 +398,9 @@ wait_for () {
 #report_status "ERR" "Reinicio WebLogic 9.2 "
 
 # [ok] test para mostrar indicador de espera
-get_enviroment
-wait_for "Revisando el log de servicios " 5
-wait_for "CLEAR"
+#get_enviroment
+#wait_for "Revisando el log de servicios " 5
+#wait_for "CLEAR"
 #while (true)
 #do
 #   wait_for "STANDBY"
