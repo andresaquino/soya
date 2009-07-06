@@ -96,8 +96,8 @@ case ${apAction}  in
       [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
       
       screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apLogsOn}\015")"
-      wait_for "Executing command ${apLogsOn} " 2
-      log_action "INFO" "Ready (${apLogsOn}), go home baby! "
+      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
+      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
       exit 0
       ;;
 
@@ -107,8 +107,8 @@ case ${apAction}  in
       [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
       
       screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apLogsOff}\015")"
-      wait_for "Executing command ${apLogsOff} " 2
-      log_action "INFO" "Ready (${apLogsOff}), go home baby! "
+      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
+      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
       exit 0
       ;;
 
@@ -118,8 +118,8 @@ case ${apAction}  in
       [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
       
       screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apSyslogsOn}\015")"
-      wait_for "Executing command ${apSyslogsOn} " 2
-      log_action "INFO" "Ready (${apSyslogsOn}), go home baby! "
+      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
+      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
       exit 0
       ;;
 
@@ -129,8 +129,8 @@ case ${apAction}  in
       [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
       
       screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apSyslogsOff}\015")"
-      wait_for "Executing command ${apSyslogsOff} " 2
-      log_action "INFO" "Ready (${apSyslogsOff}), go home baby! "
+      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
+      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
       exit 0
       ;;
 
@@ -140,8 +140,8 @@ case ${apAction}  in
       [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
       
       screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apDBlogsOn}\015")"
-      wait_for "Executing command ${apDBlogsOn} " 2
-      log_action "INFO" "Ready (${apDBlogsOn}), go home baby! "
+      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
+      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
       exit 0
       ;;
 
@@ -151,8 +151,8 @@ case ${apAction}  in
       [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
       
       screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apDBlogsOff}\015")"
-      wait_for "Executing command ${apDBlogsOff} " 2
-      log_action "INFO" "Ready (${apDBlogsOff}), go home baby! "
+      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
+      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
       exit 0
       ;;
 
@@ -162,8 +162,8 @@ case ${apAction}  in
       [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
       
       screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apBackUp}\015")"
-      wait_for "Executing command ${apBackUp} " 4
-      log_action "INFO" "Ready (${apBackUp}), go home baby! "
+      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
+      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
       exit 0
       ;;
 
@@ -173,8 +173,8 @@ case ${apAction}  in
       [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
       
       screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apLogsClear}\015")"
-      wait_for "Executing command ${apLogsClear} " 4
-      log_action "INFO" "Ready (${apLogsClear}), go home baby! "
+      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
+      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
       exit 0
       ;;
 
@@ -184,8 +184,8 @@ case ${apAction}  in
       [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
       
       screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apLevel}\015")"
-      wait_for "Executing command ${apLevel} " 4
-      log_action "INFO" "Ready (${apLevel}), go home baby! "
+      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
+      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
       tail -n100 ${apLog}.log | grep "Level for this build" | tail -n1
       exit 0
       ;;
@@ -203,6 +203,7 @@ case ${apAction}  in
          echo "Written by"
          echo "Andres Aquino <andres.aquino@gmail.com>"
       fi   
+      exit 0
       ;;
 
 esac
