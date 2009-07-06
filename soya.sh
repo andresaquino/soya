@@ -9,6 +9,7 @@
 # 
 
 # get application Name and Action
+apAppName="soya"
 apHome=${HOME}/soya
 apDir=`dirname ${PWD}/${0}`
 apName=`basename ${0%.*}`
@@ -29,9 +30,10 @@ cd ${apHome}
 get_enviroment
 apAction=`basename ${0#*.} | tr "[:upper:]" "[:lower:]"`
 apHost=`hostname | tr "[:upper:]" "[:lower:]" | sed -e "s/m.*hp//g"`
+apLog="${apHome}/log/${apName}"
 
 # virtual terminal name
-scrPrcs=`echo $0 | sed -e "s/[a-zA-Z\.]//g"`
+scrPrcs=`echo ${apName} | sed -e "s/[a-zA-Z\.]//g"`
 [ "x${scrPrcs}" != "x" ] && scrPrcs="0${scrPrcs}"
 scrName=`echo "$(echo "${apHost}____" | cut -c 1-4)" | tr "[:lower:]" "[:upper:]"`
 scrName="${scrName}${apType}${scrPrcs}"
@@ -44,7 +46,6 @@ then
    [ "x$?" = "x0" ] && log_action "ERR" "Another ${scrName} virtual terminal process exist!" && exit 1 
    
    # backup
-   apLog="${apHome}/log/${apName}"
    mkdir -p ${apHome}/log/${apDate}
    mv ${apLog}.log ${apHome}/log/${apDate}/${scrName}.log.`date '+%H%M'` > /dev/null 2>&1
 
@@ -94,8 +95,8 @@ case ${apAction}  in
       screen -ls | grep ${scrName} > /dev/null 2>&1
       [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
       
-      screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "${apLogsOn}\015")"
-      wait_for "Executing command ${apLogsOn} " 4
+      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apLogsOn}\015")"
+      wait_for "Executing command ${apLogsOn} " 2
       log_action "INFO" "Ready (${apLogsOn}), go home baby! "
       exit 0
       ;;
@@ -105,9 +106,53 @@ case ${apAction}  in
       screen -ls | grep ${scrName} > /dev/null 2>&1
       [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
       
-      screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "${apLogsOff}\015")"
-      wait_for "Executing command ${apLogsOff} " 4
+      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apLogsOff}\015")"
+      wait_for "Executing command ${apLogsOff} " 2
       log_action "INFO" "Ready (${apLogsOff}), go home baby! "
+      exit 0
+      ;;
+
+   syslogson)
+      # si no hay otro proceso
+      screen -ls | grep ${scrName} > /dev/null 2>&1
+      [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
+      
+      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apSyslogsOn}\015")"
+      wait_for "Executing command ${apSyslogsOn} " 2
+      log_action "INFO" "Ready (${apSyslogsOn}), go home baby! "
+      exit 0
+      ;;
+
+   syslogsoff)
+      # si no hay otro proceso
+      screen -ls | grep ${scrName} > /dev/null 2>&1
+      [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
+      
+      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apSyslogsOff}\015")"
+      wait_for "Executing command ${apSyslogsOff} " 2
+      log_action "INFO" "Ready (${apSyslogsOff}), go home baby! "
+      exit 0
+      ;;
+
+   dblogson)
+      # si no hay otro proceso
+      screen -ls | grep ${scrName} > /dev/null 2>&1
+      [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
+      
+      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apDBlogsOn}\015")"
+      wait_for "Executing command ${apDBlogsOn} " 2
+      log_action "INFO" "Ready (${apDBlogsOn}), go home baby! "
+      exit 0
+      ;;
+
+   dblogsoff)
+      # si no hay otro proceso
+      screen -ls | grep ${scrName} > /dev/null 2>&1
+      [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
+      
+      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apDBlogsOff}\015")"
+      wait_for "Executing command ${apDBlogsOff} " 2
+      log_action "INFO" "Ready (${apDBlogsOff}), go home baby! "
       exit 0
       ;;
 
@@ -116,7 +161,7 @@ case ${apAction}  in
       screen -ls | grep ${scrName} > /dev/null 2>&1
       [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
       
-      screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "${apBackUp}\015")"
+      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apBackUp}\015")"
       wait_for "Executing command ${apBackUp} " 4
       log_action "INFO" "Ready (${apBackUp}), go home baby! "
       exit 0
@@ -127,10 +172,37 @@ case ${apAction}  in
       screen -ls | grep ${scrName} > /dev/null 2>&1
       [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
       
-      screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "${apLogsClear}\015")"
+      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apLogsClear}\015")"
       wait_for "Executing command ${apLogsClear} " 4
       log_action "INFO" "Ready (${apLogsClear}), go home baby! "
       exit 0
+      ;;
+
+   getlevel)
+      # si no hay otro proceso
+      screen -ls | grep ${scrName} > /dev/null 2>&1
+      [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
+      
+      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apLevel}\015")"
+      wait_for "Executing command ${apLevel} " 4
+      log_action "INFO" "Ready (${apLevel}), go home baby! "
+      tail -n100 ${apLog}.log | grep "Level for this build" | tail -n1
+      exit 0
+      ;;
+
+   version)
+      # como ya cambie de SVN a GIT, no puedo usar el Id keyword, entonces ... a pensar en otra opcion ! ! ! 
+      VERSIONAPP="1"
+      UPVERSION=`echo ${VERSIONAPP} | sed -e "s/..$//g"`
+      RLVERSION=`awk '/200/{t=substr($2,7,7);gsub("-",".",t);print t}' ${apHome}/CHANGELOG | head -n1`
+      echo "${apAppName} v${UPVERSION}.${RLVERSION}"
+      echo "(c) 2009 Nextel de Mexico S.A. de C.V.\n"
+      
+      if ${SVERSION}
+      then 
+         echo "Written by"
+         echo "Andres Aquino <andres.aquino@gmail.com>"
+      fi   
       ;;
 
 esac
