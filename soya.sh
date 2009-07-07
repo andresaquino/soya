@@ -38,6 +38,24 @@ scrPrcs=`echo ${apName} | sed -e "s/[a-zA-Z\.]//g"`
 scrName=`echo "$(echo "${apHost}____" | cut -c 1-4)" | tr "[:lower:]" "[:upper:]"`
 scrName="${scrName}${apType}${scrPrcs}"
 
+##
+executeCmd () {
+   local strCommand=${1}
+
+   # si no hay otro proceso
+   screen -ls | grep ${scrName} > /dev/null 2>&1
+   [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
+
+   # ejecutar el comando
+   screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${strCommand}\015")"
+   wait_for "Executing command ${strCommand} on ${scrName} " 2
+
+   # reportar el estado de la ejecucion
+   log_action "INFO" "${strCommand} on ${scrName} cooked, go home baby! "
+ 
+}
+
+
 # START
 if [ ${apAction} = "start" ]
 then
@@ -91,101 +109,47 @@ fi
 # app.logsOn | app.logsOff | app.backUp | app.logsClear 
 case ${apAction}  in
    logson)
-      # si no hay otro proceso
-      screen -ls | grep ${scrName} > /dev/null 2>&1
-      [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
-      
-      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apLogsOn}\015")"
-      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
-      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
+      executeCmd "${apLogsOn}"
       exit 0
       ;;
 
    logsoff)
-      # si no hay otro proceso
-      screen -ls | grep ${scrName} > /dev/null 2>&1
-      [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
-      
-      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apLogsOff}\015")"
-      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
-      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
+      executeCmd "${apLogsOff}"
       exit 0
       ;;
 
    syslogson)
-      # si no hay otro proceso
-      screen -ls | grep ${scrName} > /dev/null 2>&1
-      [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
-      
-      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apSyslogsOn}\015")"
-      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
-      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
+      executeCmd "${apSyslogsOn}"
       exit 0
       ;;
 
    syslogsoff)
-      # si no hay otro proceso
-      screen -ls | grep ${scrName} > /dev/null 2>&1
-      [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
-      
-      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apSyslogsOff}\015")"
-      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
-      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
+      executeCmd "${apSyslogsOff}"
       exit 0
       ;;
 
    dblogson)
-      # si no hay otro proceso
-      screen -ls | grep ${scrName} > /dev/null 2>&1
-      [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
-      
-      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apDBlogsOn}\015")"
-      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
-      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
+      executeCmd "${apDBlogsOn}"
       exit 0
       ;;
 
    dblogsoff)
-      # si no hay otro proceso
-      screen -ls | grep ${scrName} > /dev/null 2>&1
-      [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
-      
-      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apDBlogsOff}\015")"
-      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
-      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
+      executeCmd "${apDBlogsOff}"
       exit 0
       ;;
 
    backup)
-      # si no hay otro proceso
-      screen -ls | grep ${scrName} > /dev/null 2>&1
-      [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
-      
-      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apBackUp}\015")"
-      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
-      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
+      executeCmd "${apBackUp}"
       exit 0
       ;;
 
    logsclear)
-      # si no hay otro proceso
-      screen -ls | grep ${scrName} > /dev/null 2>&1
-      [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
-      
-      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apLogsClear}\015")"
-      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
-      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
+      executeCmd "${apLogsClear}"
       exit 0
       ;;
 
    getlevel)
-      # si no hay otro proceso
-      screen -ls | grep ${scrName} > /dev/null 2>&1
-      [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
-      
-      screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${apLevel}\015")"
-      wait_for "Executing command ${apLogsOn} on ${scrName} " 2
-      log_action "INFO" "${apLogsOn} on ${scrName} cooked, go home baby! "
+      executeCmd "${apLevel}"
       tail -n100 ${apLog}.log | grep "Level for this build" | tail -n1
       exit 0
       ;;
@@ -196,11 +160,11 @@ case ${apAction}  in
       UPVERSION=`echo ${VERSIONAPP} | sed -e "s/..$//g"`
       RLVERSION=`awk '/200/{t=substr($2,7,7);gsub("-",".",t);print t}' ${apHome}/CHANGELOG | head -n1`
       echo "${apAppName} v${UPVERSION}.${RLVERSION}"
-      echo "(c) 2009 Nextel de Mexico S.A. de C.V.\n"
+      echo "(c) 2009 Nextel de Mexico S.A. de C.V."
       
-      if ${SVERSION}
+      if [ "${TTYTYPE}" = "CONSOLE" ]
       then 
-         echo "Written by"
+         echo "\nWritten by"
          echo "Andres Aquino <andres.aquino@gmail.com>"
       fi   
       exit 0
