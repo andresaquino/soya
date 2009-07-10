@@ -1,5 +1,13 @@
 
+* 2009-07-07 Andres Aquino <andres.aquino@gmail.com>
+     a9ab79e: correcciones para ejecucion de comandos..
+
 * 2009-07-06 Andres Aquino <andres.aquino@gmail.com>
+     fd77d58: changelog actualizado, quitar nextel.profile, agregar soya.conf
+     4825994: primer compilado del archivos de ayuda
+     1b88882: se agrega script de instalacion
+     c43ac0f: se anexa archivo de ayuda para construir el man
+     4ba922b: se corrige ejecucion de comandos
      2504ceb: mas comandos en ejecucion...
      b728d9e: se agregaron los comandos la log on y off ..
      90ce836: Muestra version agregando el cmd .version...

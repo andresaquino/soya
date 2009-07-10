@@ -155,7 +155,9 @@ case ${apAction}  in
       ;;
 
    version)
-      # como ya cambie de SVN a GIT, no puedo usar el Id keyword, entonces ... a pensar en otra opcion ! ! ! 
+      #
+      # generar num de release en base al changelog, para no modificar el md5 del script
+      # sh ../playground/changelog.sh -> git log > CHANGELOG
       VERSIONAPP="1"
       UPVERSION=`echo ${VERSIONAPP} | sed -e "s/..$//g"`
       RLVERSION=`awk '/200/{t=substr($2,7,7);gsub("-",".",t);print t}' ${apHome}/CHANGELOG | head -n1`
