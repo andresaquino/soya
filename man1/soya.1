@@ -59,91 +59,29 @@
 .    de IX
 ..
 .\}
-.\"
-.\" Accent mark definitions (@(#)ms.acc 1.5 88/02/08 SMI; from UCB 4.2).
-.\" Fear.  Run.  Save yourself.  No user-serviceable parts.
-.    \" fudge factors for nroff and troff
-.if n \{\
-.    ds #H 0
-.    ds #V .8m
-.    ds #F .3m
-.    ds #[ \f1
-.    ds #] \fP
-.\}
-.if t \{\
-.    ds #H ((1u-(\\\\n(.fu%2u))*.13m)
-.    ds #V .6m
-.    ds #F 0
-.    ds #[ \&
-.    ds #] \&
-.\}
-.    \" simple accents for nroff and troff
-.if n \{\
-.    ds ' \&
-.    ds ` \&
-.    ds ^ \&
-.    ds , \&
-.    ds ~ ~
-.    ds /
-.\}
-.if t \{\
-.    ds ' \\k:\h'-(\\n(.wu*8/10-\*(#H)'\'\h"|\\n:u"
-.    ds ` \\k:\h'-(\\n(.wu*8/10-\*(#H)'\`\h'|\\n:u'
-.    ds ^ \\k:\h'-(\\n(.wu*10/11-\*(#H)'^\h'|\\n:u'
-.    ds , \\k:\h'-(\\n(.wu*8/10)',\h'|\\n:u'
-.    ds ~ \\k:\h'-(\\n(.wu-\*(#H-.1m)'~\h'|\\n:u'
-.    ds / \\k:\h'-(\\n(.wu*8/10-\*(#H)'\z\(sl\h'|\\n:u'
-.\}
-.    \" troff and (daisy-wheel) nroff accents
-.ds : \\k:\h'-(\\n(.wu*8/10-\*(#H+.1m+\*(#F)'\v'-\*(#V'\z.\h'.2m+\*(#F'.\h'|\\n:u'\v'\*(#V'
-.ds 8 \h'\*(#H'\(*b\h'-\*(#H'
-.ds o \\k:\h'-(\\n(.wu+\w'\(de'u-\*(#H)/2u'\v'-.3n'\*(#[\z\(de\v'.3n'\h'|\\n:u'\*(#]
-.ds d- \h'\*(#H'\(pd\h'-\w'~'u'\v'-.25m'\f2\(hy\fP\v'.25m'\h'-\*(#H'
-.ds D- D\\k:\h'-\w'D'u'\v'-.11m'\z\(hy\v'.11m'\h'|\\n:u'
-.ds th \*(#[\v'.3m'\s+1I\s-1\v'-.3m'\h'-(\w'I'u*2/3)'\s-1o\s+1\*(#]
-.ds Th \*(#[\s+2I\s-2\h'-\w'I'u*3/5'\v'-.3m'o\v'.3m'\*(#]
-.ds ae a\h'-(\w'a'u*4/10)'e
-.ds Ae A\h'-(\w'A'u*4/10)'E
-.    \" corrections for vroff
-.if v .ds ~ \\k:\h'-(\\n(.wu*9/10-\*(#H)'\s-2\u~\d\s+2\h'|\\n:u'
-.if v .ds ^ \\k:\h'-(\\n(.wu*10/11-\*(#H)'\v'-.4m'^\v'.4m'\h'|\\n:u'
-.    \" for low resolution devices (crt and lpr)
-.if \n(.H>23 .if \n(.V>19 \
-\{\
-.    ds : e
-.    ds 8 ss
-.    ds o a
-.    ds d- d\h'-1'\(ga
-.    ds D- D\h'-1'\(hy
-.    ds th \o'bp'
-.    ds Th \o'LP'
-.    ds ae ae
-.    ds Ae AE
-.\}
-.rm #[ #] #H #V #F C
 .\" ========================================================================
 .\"
 .IX Title "SOYA 1"
-.TH SOYA 1 "2009-07-06" "perl v5.10.0" "User Contributed Perl Documentation"
+.TH SOYA 1 "2009-07-09" "1.7" "SOYA: A SOI Applications Manager"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH "NAME"
-soya \- start or stop soi platform applications
+.Vb 1
+\& soya \- start or stop soi platform applications
+.Ve
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
-Usage: soya 
-Start or stop soi platform applications like \s-1CMS\s0, \s-1CX\s0, \s-1FF\s0, \s-1NAMING\s0 and \s-1BILL\s0.
-.PP
-Report bugs to <andres.aquino@gmail.com>
+.Vb 1
+\& soya
+.Ve
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-.Vb 4
-\& monopse
-\& Aplicacion que sirve como auxiliar en la administracion de aplicaciones
-\& basadas en WebLogic, con posibilidad de extenderla a cualquier otra aplicacion
-\& que se ejecute en un sistema like UNIX*
+.Vb 3
+\& Soya se puede usar  para  iniciar  cualquier proceso via el comando screen,
+\& es un metascript que indicando los comandos en un archivo de configuracion,
+\& facilita la ejecucion de determinados comandos.
 \&
 \& Utiliza un directorio de configuracion, donde se almacenan los siguientes
 \& archivos:
@@ -223,17 +161,16 @@ Report bugs to <andres.aquino@gmail.com>
 .Ve
 .SH "AUTHOR"
 .IX Header "AUTHOR"
-.Vb 2
-\& monopse v2.6.25
-\& (c) 2009 Nextel de Mexico S.A. de C.V.
-\& 
-\& Written by
-\& Andres Aquino <andres.aquino@gmail.com>
+.Vb 1
+\& soya written by Andres Aquino and Nextel Friends.
 .Ve
 .SH "BUGS"
 .IX Header "BUGS"
 .Vb 1
-\& Muchos!
-\& 
-\& Algun voluntario a encontrarlos ?
+\& Report bugs to <andres.aquino@gmail.com>
+.Ve
+.SH "COPYRIGHT"
+.IX Header "COPYRIGHT"
+.Vb 1
+\& Copyright Â© 2008 Nextel de Mexico S.A. de C.V.
 .Ve

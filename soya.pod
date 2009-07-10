@@ -1,20 +1,18 @@
+=pod
+
 =head1 NAME
 
-soya - start or stop soi platform applications
+ soya - start or stop soi platform applications
 
 =head1 SYNOPSIS
 
-Usage: soya 
-Start or stop soi platform applications like CMS, CX, FF, NAMING and BILL.
-
-Report bugs to <andres.aquino@gmail.com>
+ soya
 
 =head1 DESCRIPTION 
-
- monopse
- Aplicacion que sirve como auxiliar en la administracion de aplicaciones
- basadas en WebLogic, con posibilidad de extenderla a cualquier otra aplicacion
- que se ejecute en un sistema like UNIX*
+ 
+ Soya se puede usar  para  iniciar  cualquier proceso via el comando screen,
+ es un metascript que indicando los comandos en un archivo de configuracion,
+ facilita la ejecucion de los mismos.
 
  Utiliza un directorio de configuracion, donde se almacenan los siguientes
  archivos:
@@ -91,17 +89,17 @@ DOMINIOS
 
 =head1 AUTHOR
 
- monopse v2.6.25
- (c) 2009 Nextel de Mexico S.A. de C.V.
- 
- Written by
- Andres Aquino <andres.aquino@gmail.com>
+ soya written by Andres Aquino and Nextel Friends.
 
 =head1 BUGS
 
- Muchos!
- 
- Algun voluntario a encontrarlos ?
+ Report bugs to <andres.aquino@gmail.com>
+
+=head1 COPYRIGHT
+
+ Copyright © 2008 Nextel de Mexico S.A. de C.V. 
+
+=encoding utf8
 
 =cut
 # vim: set ts=3 sw=3 sts=3 et si ai:
