@@ -19,12 +19,12 @@ cd ${apHome}
 
 # i need a config file...
 [ ! -e ${apHome}/soya.conf ] && echo "hey!, i need a config file like soya.conf" && exit 1
-[ ! -e ${apHome}/${apName}.conf ] && echo "hey!, i need a config file like ${apName}.conf" && exit 1
+[ ! -e ${apHome}/setup/${apName}.conf ] && echo "hey!, i need a config file like ${apHome}/setup/${apName}.conf" && exit 1
 
 # settings, setup & libraries
 . ${apHome}/soya.conf
 . ${apHome}/libutils.sh
-. ${apHome}/${apName}.conf
+. ${apHome}/setup/${apName}.conf
 
 #
 get_enviroment
@@ -68,7 +68,7 @@ then
    mv ${apLog}.log ${apHome}/log/${apDate}/${scrName}.log.`date '+%H%M'` > /dev/null 2>&1
 
    #
-   . ${apName}.conf
+   . ${apHome}/setup/${apName}.conf
    screen -d -m -S ${scrName}
    screen -r ${scrName} -p 0 -X log off
    screen -r ${scrName} -p 0 -X logfile ${apLog}.log
