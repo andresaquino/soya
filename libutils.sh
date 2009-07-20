@@ -118,12 +118,12 @@ get_process_id () {
    local WRDSLIST=`echo "${FILTER}" | sed -e "s/\///g;s/,/\/\&\&\//g;s/;/\/\|\|\//g"` 
 
    # verificar si se cuenta con una ruta para almacenar los pid's
-   if [ -n "${PROCID}" ]
+   if [ -n "${PROCESSNAME}" ]
    then
-      PROCNAME=${PROCID}
-   fi
-   PROCID="${PROCPATH}/${PROCNAME}"
-   mkdir -p ${PROCID}
+      PROCESSNAME="utils"
+   fi  
+   mkdir -p /tmp/${PROCESSNAME}
+   PROCID="/tmp/${PROCESSNAME}/${APPNAME}"
 
    # extraer procesos existentes y filtrar las cadenas del archivo de configuracion
    #log_action "NOTICE" "Buscando procesos ${WRDSLIST} propiedad de ${apUser}"
@@ -169,12 +169,12 @@ processes_running () {
    local PROCID="${1}"
 
    # verificar si se cuenta con una ruta para almacenar los pid's
-   if [ -n "${PROCID}" ]
+   if [ -n "${PROCESSNAME}" ]
    then
-      PROCNAME="${PROCID}"
-   fi
-   PROCID="${PROCPATH}/${PROCNAME}/${APPNAME}"
-   mkdir -p ${PROCID}
+      PROCESSNAME="utils"
+   fi  
+   mkdir -p /tmp/${PROCESSNAME}
+   PROCID="/tmp/${PROCESSNAME}/${APPNAME}"
 
    # si no existe el archivo de .pid, reportarlo y terminar
    if [ ! -s "${PROCID}.pid" ]
@@ -203,16 +203,15 @@ processes_running () {
 log_action () {
    local LEVEL="${1}"
    local ACTION="${2}"
-   local PROCID="${3}"
    local APPLOG="${APPPATH}/${APPNAME}"
 
    # verificar si se cuenta con una ruta para almacenar los pid's
-   if [ -n "${PROCID}" ]
+   if [ -n "${PROCESSNAME}" ]
    then
-      PROCNAME="${PROCID}"
+      PROCESSNAME="utils"
    fi
-   PROCID="${PROCPATH}/${PROCNAME}/${APPNAME}"
-   mkdir -p ${PROCID}
+   mkdir -p /tmp/${PROCESSNAME}
+   PROCID="/tmp/${PROCESSNAME}/${APPNAME}"
 
    # filelog y process id
    local MTIME="`date '+%H:%M:%S'`"
@@ -299,12 +298,12 @@ filter_in_log () {
    local APPLOG="${APPPATH}/${APPNAME}"
 
    # verificar si se cuenta con una ruta para almacenar los pid's
-   if [ -n "${PROCID}" ]
+   if [ -n "${PROCESSNAME}" ]
    then
-      PROCNAME="${PROCID}"
-   fi
-   PROCID="${PROCPATH}/${PROCNAME}/${APPNAME}"
-   mkdir -p ${PROCID}
+      PROCESSNAME="utils"
+   fi  
+   mkdir -p /tmp/${PROCESSNAME}
+   PROCID="/tmp/${PROCESSNAME}/${APPNAME}"
 
    # la long de la cad no esta vacia
    if [ -n "${SEARCHSTR}" ]
