@@ -1,5 +1,10 @@
 
+* 2009-07-20 Andres Aquino <andres.aquino@gmail.com>
+     57dccfd: agregar nuevos procesos de configuracion...
+
 * 2009-07-10 Andres Aquino <andres.aquino@gmail.com>
+     18c205c: mover a raiz archivo de configuracion
+     32c433a: FIX: cambio setup, carga de configuracion
      631f6da: borrado de archivos ya no necesarios
      f2e1740: cambios en setup para aplicaciones...
      a3a00ac: Update changelog file
