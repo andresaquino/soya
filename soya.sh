@@ -160,7 +160,7 @@ case ${apAction}  in
       # sh ../playground/changelog.sh -> git log > CHANGELOG
       VERSIONAPP="1"
       UPVERSION=`echo ${VERSIONAPP} | sed -e "s/..$//g"`
-      RLVERSION=`awk '/200/{t=substr($2,7,7);gsub("-",".",t);print t}' ${apHome}/CHANGELOG | head -n1`
+      RLVERSION=`awk '/200/{t=substr($2,6,7);gsub("-",".",t);print t}' ${apHome}/CHANGELOG | head -n1`
       echo "${apAppName} v${UPVERSION}.${RLVERSION}"
       echo "(c) 2009 Nextel de Mexico S.A. de C.V."
       
