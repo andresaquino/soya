@@ -13,6 +13,7 @@ apAppName="soya"
 apHome=${HOME}/soya
 apDir=`dirname ${PWD}/${0}`
 apName=`basename ${0%.*}`
+scrPrcs=0
 
 # move to application home directory
 cd ${apHome}
