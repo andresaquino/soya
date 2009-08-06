@@ -1,5 +1,9 @@
 
+* 2009-08-05 Andres Aquino <andres.aquino@gmail.com>
+     4e28b09: verificar el scrProcess, validar por si es necesario
+
 * 2009-08-03 Andres Aquino <andres.aquino@gmail.com>
+     17a3d2a: cambios al log y version
      dc963e5: ahora hace un upgrade...
      dda878c: agregar test para evaluar func de soya
      a72f2b1: agregar test para evaluar func de soya
