@@ -1,4 +1,7 @@
 
+* 2009-08-15 Andres Aquino <andres.aquino@gmail.com>
+     78bb30f: FIX: cuando se ejecuta fuera del directorio setup, la aplicacion genera errores en log
+
 * 2009-08-06 Andres Aquino <andres.aquino@gmail.com>
      a913dfc: archivo de cambios...
 

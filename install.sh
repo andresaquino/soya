@@ -9,6 +9,7 @@
 
 mkdir -p ~/bin
 # si existe, moverlo
+[ -d ~/soya.old ] && rm -fr ~/soya.old
 [ -d ~/soya ] && mv ~/soya ~/soya.old
 [ -d ~/soya.git ] && mv ~/soya.git ~/soya
 [ -d ~/soya.oldi/setup ] && cp -rp ~/soya.old/setup/* ~/soya/setup/ 
