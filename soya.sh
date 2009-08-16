@@ -22,6 +22,10 @@ cd ${apHome}
 [ ! -e ${apHome}/soya.conf ] && echo "hey!, i need a config file like soya.conf" && exit 1
 [ ! -e ${apHome}/setup/${apName}.conf ] && echo "hey!, i need a config file like ${apHome}/setup/${apName}.conf" && exit 1
 
+#
+APPNAME=${apAppName}
+APPPATH=${apHome}
+
 # settings, setup & libraries
 . ${apHome}/soya.conf
 . ${apHome}/libutils.sh
