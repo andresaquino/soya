@@ -1,5 +1,6 @@
 
 * 2009-08-15 Andres Aquino <andres.aquino@gmail.com>
+     ff956a2: FIX: cuando se instala, eliminar la copia de old para poder sobreescribir
      78bb30f: FIX: cuando se ejecuta fuera del directorio setup, la aplicacion genera errores en log
 
 * 2009-08-06 Andres Aquino <andres.aquino@gmail.com>
