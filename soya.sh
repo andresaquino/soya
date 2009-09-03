@@ -34,8 +34,7 @@ apHost=`hostname | tr "[:upper:]" "[:lower:]" | sed -e "s/m.*hp//g"`
 apLog="${apHome}/log/${apName}"
 
 # virtual terminal name
-scrPrcs=`echo ${apName} | sed -e "s/[a-zA-Z\.]//g"`
-[ "x${scrPrcs}" != "x" ] && scrPrcs="0${scrPrcs}"
+scrPrcs=`echo ${apName} | sed -e "s/[a-zA-Z\.]/0/g;s/.*\([0-9][0-9]\)$/\1/g"`
 scrName=`echo "$(echo "${apHost}____" | cut -c 1-4)" | tr "[:lower:]" "[:upper:]"`
 scrName="${scrName}${apType}${scrPrcs}"
 
