@@ -73,10 +73,10 @@ get_tree_of_applications () {
    do
       case "${systemSO}" in
          "HP-UX")
-            proc=`cat /tmp/pslist | awk -v pp=$p '{if ($5 ~ pp){print $4}}'`
+            proc=`cat /tmp/pslist | awk -v pp=$p '{if ($5 ~ pp){print $4}}' 2> /dev/null`
             ;;
          "Linux")
-            proc=`cat /tmp/pslist | awk -v pp=$p '{if ($4 ~ pp){print $3}}'`
+            proc=`cat /tmp/pslist | awk -v pp=$p '{if ($4 ~ pp){print $3}}' 2> /dev/null`
             ;;
       esac
       
@@ -134,10 +134,10 @@ then
    do
        case "${systemSO}" in
          "HP-UX")
-            pname=`cat /tmp/pslist | awk -v pp=$PID '{if ($4 ~ pp){print $0}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g"`
+            pname=`cat /tmp/pslist | awk -v pp=$PID '{if ($4 ~ pp){print $0}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null` 
             ;;
          "Linux")
-            pname=`cat /tmp/pslist | awk -v pp=$PID '{if ($3 ~ pp){print $0}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g"`
+            pname=`cat /tmp/pslist | awk -v pp=$PID '{if ($3 ~ pp){print $0}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null`
             ;;
       esac
       echo "${PID} ${pname}"
