@@ -61,26 +61,31 @@ executeCmd () {
 ##
 get_tree_of_applications () {
    local nameProcess=${1}
-   local pidOf=
-   local pidList=
-   local count=0
-   local lastCount=0
 
    rm -f $pidfile
-   echo "0: NAME - $nameProcess"
    get_process_id "$nameProcess"
 
-   echo "1: PID - `cat $pidfile` -"
+   [ ! -e $pidfile ] && log_action "ERR" "${scrName} process doesn't exist!" && exit 1 
+
+   p=`cat $pidfile`
+   echo $p > /tmp/${scrName}.proc
    while true
    do
-      cat $pidfile | while read pidOf; do pidList="$pidOf,$pidList"; done
-      pidList=`echo $pidList | sed -e "s/;$//g"`
-      echo "2: PIDS - $pidList -"
-      get_process_id "$pidList"
+      case "${systemSO}" in
+         "HP-UX")
+            proc=`cat /tmp/pslist | awk -v pp=$p '{if ($5 ~ pp){print $4}}'`
+            ;;
+         "Linux")
+            proc=`cat /tmp/pslist | awk -v pp=$p '{if ($4 ~ pp){print $3}}'`
+            ;;
+      esac
       
-      count=`cat $pidfile | wc -l`
-      [ $count -ne $lastCount ] && lastCount=$count || break
+      [ "x$proc" = "x" ] && break
+      
+      p=$proc
+      echo $proc >> /tmp/${nameProcess}.proc
    done
+   sort -n /tmp/${nameProcess}.proc > /tmp/${nameProcess}.list
 
 }
 
@@ -112,7 +117,7 @@ then
    log_action "INFO" "Process ${apType} running in background "
 
    # get the tree applications
-   get_process_id "${scrName}"
+   get_tree_of_applications ${scrName}
 
    exit 0
 
@@ -122,11 +127,21 @@ fi
 if [ ${apAction} = "check" ]
 then
    # determinar procesos a terminar
-   #get_tree_of_applications ${scrName}
-   get_process_id "${scrName}"
+   get_tree_of_applications ${scrName}
 
-   # verificar 
-   cat $pidfile
+   #
+   for PID in $(cat /tmp/${scrName}.list)
+   do
+       case "${systemSO}" in
+         "HP-UX")
+            pname=`cat /tmp/pslist | awk -v pp=$PID '{if ($4 ~ pp){print $0}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g"`
+            ;;
+         "Linux")
+            pname=`cat /tmp/pslist | awk -v pp=$PID '{if ($3 ~ pp){print $0}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g"`
+            ;;
+      esac
+      echo "${PID} ${pname}"
+   done
 
 fi
 
@@ -148,9 +163,7 @@ then
       screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "exit\015")"
       wait_for "Stoping process " 14
       
-      #awk '{print "kill -9 "$1}' $pidfile 
-      #| sh > /dev/null 2>&1
-      #screen -x ${scrName} -p 0 -X quit > /dev/null 2>&1
+      awk '{print "kill -9 "$1}' /tmp/${scrName}.list | sh > /dev/null 2>&1
       log_action "INFO" "Process ${scrName} finalized "
    fi
    exit 0
