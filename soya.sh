@@ -38,6 +38,9 @@ scrPrcs=`echo ${apName} | sed -e "s/[a-zA-Z\.]/0/g;s/.*\([0-9][0-9]\)$/\1/g"`
 scrName=`echo "$(echo "${apHost}____" | cut -c 1-4)" | tr "[:lower:]" "[:upper:]"`
 scrName="${scrName}${apType}${scrPrcs}"
 
+get_enviroment 
+pidfile="/tmp/${0%.*}.pid"
+
 ##
 executeCmd () {
    local strCommand=${1}
@@ -55,11 +58,38 @@ executeCmd () {
  
 }
 
+##
+get_tree_of_applications () {
+   local nameProcess=${1}
+   local pidOf=
+   local pidList=
+   local count=0
+   local lastCount=0
+
+   rm -f $pidfile
+   echo "0: NAME - $nameProcess"
+   get_process_id "$nameProcess"
+
+   echo "1: PID - `cat $pidfile` -"
+   while true
+   do
+      cat $pidfile | while read pidOf; do pidList="$pidOf,$pidList"; done
+      pidList=`echo $pidList | sed -e "s/;$//g"`
+      echo "2: PIDS - $pidList -"
+      get_process_id "$pidList"
+      
+      count=`cat $pidfile | wc -l`
+      [ $count -ne $lastCount ] && lastCount=$count || break
+   done
+
+}
+
 
 # START
 if [ ${apAction} = "start" ]
 then
    # si no hay otro proceso
+   screen -wipe > /dev/null 2&>1
    screen -ls | grep ${scrName} > /dev/null 2>&1
    [ "x$?" = "x0" ] && log_action "ERR" "Another ${scrName} virtual terminal process exist!" && exit 1 
    
@@ -80,13 +110,33 @@ then
    screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "${apCommand}\015")"
    wait_for "Starting process " 8
    log_action "INFO" "Process ${apType} running in background "
+
+   # get the tree applications
+   get_process_id "${scrName}"
+
    exit 0
 
 fi
 
+# CHECK
+if [ ${apAction} = "check" ]
+then
+   # determinar procesos a terminar
+   #get_tree_of_applications ${scrName}
+   get_process_id "${scrName}"
+
+   # verificar 
+   cat $pidfile
+
+fi
+
+ 
 # STOP
 if [ ${apAction} = "stop" ]
 then
+   # determinar procesos a terminar
+   get_tree_of_applications ${scrName}
+
    # si no hay otro proceso
    screen -ls | grep ${scrName} > /dev/null 2>&1
    if [ "x$?" != "x0" ] 
@@ -96,9 +146,11 @@ then
    else
       screen -r ${scrName} -p 0 -X log off
       screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "exit\015")"
-      wait_for "Stoping process " 12
+      wait_for "Stoping process " 14
       
-      screen -x ${scrName} -p 0 -X quit > /dev/null 2>&1
+      #awk '{print "kill -9 "$1}' $pidfile 
+      #| sh > /dev/null 2>&1
+      #screen -x ${scrName} -p 0 -X quit > /dev/null 2>&1
       log_action "INFO" "Process ${scrName} finalized "
    fi
    exit 0

@@ -82,7 +82,7 @@ get_enviroment () {
          ;;
          
       "Linux")
-         PSOPTS="lfaex"
+         PSOPTS="lax"
          PSPOS=0
          DFOPTS="-Pk"
          MKOPTS="-t "
