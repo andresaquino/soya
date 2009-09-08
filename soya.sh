@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/sh -x
 # vim: set ts=3 sw=3 sts=3 et si ai: 
 
 # soya.sh -- put here a short description 
@@ -45,6 +45,9 @@ pidfile="/tmp/${0%.*}.pid"
 executeCmd () {
    local strCommand=${1}
 
+   # eliminar referencias nulas del screen
+   screen -wipe > /dev/null 2&>1
+
    # si no hay otro proceso
    screen -ls | grep ${scrName} > /dev/null 2>&1
    [ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
@@ -67,21 +70,23 @@ get_tree_of_applications () {
 
    [ ! -e $pidfile ] && log_action "ERR" "${scrName} process doesn't exist!" && exit 1 
 
-   p=`cat $pidfile`
+   p=`cat $pidfile | sort -n | head -n1`
    echo $p > /tmp/${scrName}.proc
+   echo "pid: |$p|"
    while true
    do
       case "${systemSO}" in
          "HP-UX")
-            proc=`cat /tmp/pslist | awk -v pp=$p '{if ($5 ~ pp){print $4}}' 2> /dev/null`
+            proc=`cat /tmp/pslist | awk -v pp=$p '{if ($5 ~ pp){print $4}}' 2> /dev/null | sed -e "s/ *//g"`
             ;;
          "Linux")
-            proc=`cat /tmp/pslist | awk -v pp=$p '{if ($4 ~ pp){print $3}}' 2> /dev/null`
+            proc=`cat /tmp/pslist | awk -v pp=$p '{if ($4 ~ pp){print $3}}' 2> /dev/null | sed -e "s/ *//g"`
             ;;
       esac
       
       [ "x$proc" = "x" ] && break
       
+      echo "pid: |$proc|"
       p=$proc
       echo $proc >> /tmp/${nameProcess}.proc
    done
@@ -93,8 +98,10 @@ get_tree_of_applications () {
 # START
 if [ ${apAction} = "start" ]
 then
-   # si no hay otro proceso
-   screen -wipe > /dev/null 2&>1
+
+   # eliminar referencias nulas del screen
+   screen -wipe > /dev/null 2>&1
+
    screen -ls | grep ${scrName} > /dev/null 2>&1
    [ "x$?" = "x0" ] && log_action "ERR" "Another ${scrName} virtual terminal process exist!" && exit 1 
    
@@ -126,6 +133,7 @@ fi
 # CHECK
 if [ ${apAction} = "check" ]
 then
+
    # determinar procesos a terminar
    get_tree_of_applications ${scrName}
 
@@ -149,6 +157,7 @@ fi
 # STOP
 if [ ${apAction} = "stop" ]
 then
+
    # determinar procesos a terminar
    get_tree_of_applications ${scrName}
 
