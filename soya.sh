@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 # vim: set ts=3 sw=3 sts=3 et si ai: 
 
 # soya.sh -- put here a short description 
@@ -72,7 +72,6 @@ get_tree_of_applications () {
 
    p=`cat $pidfile | sort -n | head -n1`
    echo $p > /tmp/${scrName}.proc
-   echo "pid: |$p|"
    while true
    do
       case "${systemSO}" in
@@ -86,7 +85,6 @@ get_tree_of_applications () {
       
       [ "x$proc" = "x" ] && break
       
-      echo "pid: |$proc|"
       p=$proc
       echo $proc >> /tmp/${nameProcess}.proc
    done
@@ -138,6 +136,8 @@ then
    get_tree_of_applications ${scrName}
 
    #
+   echo "Execution's tree"
+   pos=
    for PID in $(cat /tmp/${scrName}.list)
    do
        case "${systemSO}" in
@@ -148,7 +148,8 @@ then
             pname=`cat /tmp/pslist | awk -v pp=$PID '{if ($3 ~ pp){print $0}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null`
             ;;
       esac
-      echo "${PID} ${pname}"
+      echo "${pos} '- (${PID})${pname}"
+      [ "x${pos}" = "x" ] && pos=" "
    done
 
 fi
@@ -171,10 +172,16 @@ then
       screen -r ${scrName} -p 0 -X log off
       screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "exit\015")"
       wait_for "Stoping process " 14
+      log_action "INFO" "Process ${scrName} finalized "
       
+      #TODO: validar por PID y eliminarlo 
       awk '{print "kill -9 "$1}' /tmp/${scrName}.list | sh > /dev/null 2>&1
       log_action "INFO" "Process ${scrName} finalized "
    fi
+
+   # eliminar referencias nulas del screen
+   screen -wipe > /dev/null 2>&1
+
    exit 0
 
 fi
