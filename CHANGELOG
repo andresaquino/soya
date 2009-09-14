@@ -1,4 +1,8 @@
 
+* 2009-09-08 Andres Aquino <andres.aquino@gmail.com>
+     fa3c337: agregar el screen -wipe al terminar de eliminar procesos
+     2bd67f0: con comentarios para hacer traza de la aplicacion
+
 * 2009-09-07 Andres Aquino <andres.aquino@gmail.com>
      2acf37e: quitar/agregar archivos necesarios...
      aa30e1d: quita el error standard de la salida general
