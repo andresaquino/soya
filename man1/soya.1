@@ -59,10 +59,72 @@
 .    de IX
 ..
 .\}
+.\"
+.\" Accent mark definitions (@(#)ms.acc 1.5 88/02/08 SMI; from UCB 4.2).
+.\" Fear.  Run.  Save yourself.  No user-serviceable parts.
+.    \" fudge factors for nroff and troff
+.if n \{\
+.    ds #H 0
+.    ds #V .8m
+.    ds #F .3m
+.    ds #[ \f1
+.    ds #] \fP
+.\}
+.if t \{\
+.    ds #H ((1u-(\\\\n(.fu%2u))*.13m)
+.    ds #V .6m
+.    ds #F 0
+.    ds #[ \&
+.    ds #] \&
+.\}
+.    \" simple accents for nroff and troff
+.if n \{\
+.    ds ' \&
+.    ds ` \&
+.    ds ^ \&
+.    ds , \&
+.    ds ~ ~
+.    ds /
+.\}
+.if t \{\
+.    ds ' \\k:\h'-(\\n(.wu*8/10-\*(#H)'\'\h"|\\n:u"
+.    ds ` \\k:\h'-(\\n(.wu*8/10-\*(#H)'\`\h'|\\n:u'
+.    ds ^ \\k:\h'-(\\n(.wu*10/11-\*(#H)'^\h'|\\n:u'
+.    ds , \\k:\h'-(\\n(.wu*8/10)',\h'|\\n:u'
+.    ds ~ \\k:\h'-(\\n(.wu-\*(#H-.1m)'~\h'|\\n:u'
+.    ds / \\k:\h'-(\\n(.wu*8/10-\*(#H)'\z\(sl\h'|\\n:u'
+.\}
+.    \" troff and (daisy-wheel) nroff accents
+.ds : \\k:\h'-(\\n(.wu*8/10-\*(#H+.1m+\*(#F)'\v'-\*(#V'\z.\h'.2m+\*(#F'.\h'|\\n:u'\v'\*(#V'
+.ds 8 \h'\*(#H'\(*b\h'-\*(#H'
+.ds o \\k:\h'-(\\n(.wu+\w'\(de'u-\*(#H)/2u'\v'-.3n'\*(#[\z\(de\v'.3n'\h'|\\n:u'\*(#]
+.ds d- \h'\*(#H'\(pd\h'-\w'~'u'\v'-.25m'\f2\(hy\fP\v'.25m'\h'-\*(#H'
+.ds D- D\\k:\h'-\w'D'u'\v'-.11m'\z\(hy\v'.11m'\h'|\\n:u'
+.ds th \*(#[\v'.3m'\s+1I\s-1\v'-.3m'\h'-(\w'I'u*2/3)'\s-1o\s+1\*(#]
+.ds Th \*(#[\s+2I\s-2\h'-\w'I'u*3/5'\v'-.3m'o\v'.3m'\*(#]
+.ds ae a\h'-(\w'a'u*4/10)'e
+.ds Ae A\h'-(\w'A'u*4/10)'E
+.    \" corrections for vroff
+.if v .ds ~ \\k:\h'-(\\n(.wu*9/10-\*(#H)'\s-2\u~\d\s+2\h'|\\n:u'
+.if v .ds ^ \\k:\h'-(\\n(.wu*10/11-\*(#H)'\v'-.4m'^\v'.4m'\h'|\\n:u'
+.    \" for low resolution devices (crt and lpr)
+.if \n(.H>23 .if \n(.V>19 \
+\{\
+.    ds : e
+.    ds 8 ss
+.    ds o a
+.    ds d- d\h'-1'\(ga
+.    ds D- D\h'-1'\(hy
+.    ds th \o'bp'
+.    ds Th \o'LP'
+.    ds ae ae
+.    ds Ae AE
+.\}
+.rm #[ #] #H #V #F C
 .\" ========================================================================
 .\"
 .IX Title "SOYA 1"
-.TH SOYA 1 "2009-07-09" "1.7" "SOYA: A SOI Applications Manager"
+.TH SOYA 1 "2010-01-15" "perl v5.10.0" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -81,96 +143,46 @@
 .Vb 3
 \& Soya se puede usar  para  iniciar  cualquier proceso via el comando screen,
 \& es un metascript que indicando los comandos en un archivo de configuracion,
-\& facilita la ejecucion de determinados comandos.
+\& facilita la ejecucion de los mismos.
 \&
 \& Utiliza un directorio de configuracion, donde se almacenan los siguientes
 \& archivos:
-\&  * monopse.sh
+\&  * soya.sh
 \&    Aplicacion principal
 \&
-\&  * monopse.conf
-\&    Configuracion de parametros generales a la aplicacion
-\&
-\&  * [dominio]\-monopse.conf
-\&    Configuracion para un dominio en particular, vease dominios.
-\&
-\&  * monopse.log
-\&    Log de ejecucion
-.Ve
-.PP
-\&\s-1DOMINIOS\s0
- El archivo para configurar un dominio en particular tiene los
- siguientes parametros posibles:
-.PP
-.Vb 2
-\& Para indicar cual es el shell que inicia la aplicacion
-\& STARTAPP=[bin/start\-app.sh]
-\& 
-\& Para indicar cual es el shell que detiene la aplicacion
-\& STOPAPP=[stop\-app.sh]
-\& 
-\& Si es necesario ejecutar un shell antes de iniciar la aplicacion
-\& PREEXECUTION=[bin/before\-start.sh]
-\& 
-\& La ruta del dominio
-\& PATHAPP=[path/to/app/or/domain]
-\& 
-\& Claves para filtrar la ejecucion de la aplicacion
-\& FILTERAPP=["domainUp=1"]
-\& 
-\& FILTERLANG=["perl"]
-\& 
-\& En caso de que se manejen dominios administrados, indicar con que
-\& aplicacion se inicia el administrador y cual es la Clave para filtrar
-\& el proceso
-\& WLSAPP=[bin/app\-manager.sh]
-\& 
-\& FILTERWL=["app=manager"]
-\& 
-\& Si se quiere indicar que no se genere un archivo con el stderr, o se
-\& concentre toda la salida en unico archivo de bitacora
-\& UNIQUELOG=[true|false]
-\& 
-\& Clave para verificar si la aplicacion se encuentra en ejecucion, se
-\& buscara en el archivo de bitacora
-\& UPSTRING=["Startup Success"]
-\& 
-\& Clave para verificar que la aplicacion ya no se encuentra en ejecucion,
-\& se buscara en el archivo de bitacora y posteriormente el PID del proceso
-\& DOWNSTRING=["thanks for using monopse"]
-\& 
-\& Tiempo de espera antes de verificar si se encuentra en ejecucion o no
-\& la aplicacion
-\& TOSLEEP=[0\-99]
+\&  * soya.conf
+\&    Archivo de configuracion de parametros de aplicacion
 .Ve
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
-.Vb 2
-\& Para usar monopse es necesario tener configurado al menos un dominio, supongamos
-\& el super proyecto NOE:
-\&
-\& * para iniciar NOE
-\&   $ ~/bin/monopse \-\-application=wliNOEdes \-\-start
+.Vb 5
+\& Para activar una nueva aplicacion es necesario hacer lo siguiente:
+\& 1. Crear una liga con el nombre de la aplicacion desde el directorio
+\&    $HOME/soya/setup con el parametro start y stop, ej.
+\&    ln \-sf $HOME/soya/soya.sh $HOME/soya/setup/app.start 
+\&    ln \-sf $HOME/soya/soya.sh $HOME/soya/setup/app.stop 
 \& 
-\& * con opciones cortas
-\&   $ ~/bin/monopse \-a=wliNOEdes start
-\&
-\& * de plano si ya es muy grande la hueva (TIP)
-\&   $ alias noedes=\*(Aq~/bin/monopse \-a=wliNOEdes\*(Aq
-\&        $ noedes start
+\& 2. Crear un archivo de configuracion, donde se incluyan algunos de los
+\&    parametros necesarios para la aplicacion, ej:
+\&    # app.conf \-\- put here a short description.
+\&    # \-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+\&    apDebug=off
+\&    apType=CT
+\&    apCommand="sh ${HOME}/tomcat/bin/catalina.sh run"
 .Ve
 .SH "AUTHOR"
 .IX Header "AUTHOR"
-.Vb 1
-\& soya written by Andres Aquino and Nextel Friends.
+.Vb 2
+\& soya v2.01
+\& (c) 2008, 2009 Nextel de Mexico 
+\&
+\& Written by
+\& Andres Aquino <andres.aquino@gmail.com>
 .Ve
 .SH "BUGS"
 .IX Header "BUGS"
 .Vb 1
-\& Report bugs to <andres.aquino@gmail.com>
-.Ve
-.SH "COPYRIGHT"
-.IX Header "COPYRIGHT"
-.Vb 1
-\& Copyright Â© 2008 Nextel de Mexico S.A. de C.V.
+\& Muchos!
+\&      
+\& Se necesitan traductores... !!!
 .Ve

@@ -16,90 +16,41 @@
 
  Utiliza un directorio de configuracion, donde se almacenan los siguientes
  archivos:
-  * monopse.sh
+  * soya.sh
     Aplicacion principal
 
-  * monopse.conf
-    Configuracion de parametros generales a la aplicacion
-
-  * [dominio]-monopse.conf
-    Configuracion para un dominio en particular, vease dominios.
-
-  * monopse.log
-    Log de ejecucion
-
-DOMINIOS
- El archivo para configurar un dominio en particular tiene los
- siguientes parametros posibles:
- 
- Para indicar cual es el shell que inicia la aplicacion
- STARTAPP=[bin/start-app.sh]
- 
- Para indicar cual es el shell que detiene la aplicacion
- STOPAPP=[stop-app.sh]
- 
- Si es necesario ejecutar un shell antes de iniciar la aplicacion
- PREEXECUTION=[bin/before-start.sh]
- 
- La ruta del dominio
- PATHAPP=[path/to/app/or/domain]
- 
- Claves para filtrar la ejecucion de la aplicacion
- FILTERAPP=["domainUp=1"]
- 
- FILTERLANG=["perl"]
- 
- En caso de que se manejen dominios administrados, indicar con que
- aplicacion se inicia el administrador y cual es la Clave para filtrar
- el proceso
- WLSAPP=[bin/app-manager.sh]
- 
- FILTERWL=["app=manager"]
- 
- Si se quiere indicar que no se genere un archivo con el stderr, o se
- concentre toda la salida en unico archivo de bitacora
- UNIQUELOG=[true|false]
- 
- Clave para verificar si la aplicacion se encuentra en ejecucion, se
- buscara en el archivo de bitacora
- UPSTRING=["Startup Success"]
- 
- Clave para verificar que la aplicacion ya no se encuentra en ejecucion,
- se buscara en el archivo de bitacora y posteriormente el PID del proceso
- DOWNSTRING=["thanks for using monopse"]
- 
- Tiempo de espera antes de verificar si se encuentra en ejecucion o no
- la aplicacion
- TOSLEEP=[0-99]
+  * soya.conf
+    Archivo de configuracion de parametros de aplicacion
 
 =head1 EXAMPLES
 
- Para usar monopse es necesario tener configurado al menos un dominio, supongamos
- el super proyecto NOE:
-
- * para iniciar NOE
-   $ ~/bin/monopse --application=wliNOEdes --start
+ Para activar una nueva aplicacion es necesario hacer lo siguiente:
+ 1. Crear una liga con el nombre de la aplicacion desde el directorio
+    $HOME/soya/setup con el parametro start y stop, ej.
+    ln -sf $HOME/soya/soya.sh $HOME/soya/setup/app.start 
+    ln -sf $HOME/soya/soya.sh $HOME/soya/setup/app.stop 
  
- * con opciones cortas
-   $ ~/bin/monopse -a=wliNOEdes start
-
- * de plano si ya es muy grande la hueva (TIP)
-   $ alias noedes='~/bin/monopse -a=wliNOEdes'
-	$ noedes start
-
+ 2. Crear un archivo de configuracion, donde se incluyan algunos de los
+    parametros necesarios para la aplicacion, ej:
+    # app.conf -- put here a short description.
+    # -----------------------------------------
+    apDebug=off
+    apType=CT
+    apCommand="sh ${HOME}/tomcat/bin/catalina.sh run"
+ 
 =head1 AUTHOR
 
- soya written by Andres Aquino and Nextel Friends.
+ soya v2.01
+ (c) 2008, 2009 Nextel de Mexico 
+
+ Written by
+ Andres Aquino <andres.aquino@gmail.com>
 
 =head1 BUGS
 
- Report bugs to <andres.aquino@gmail.com>
-
-=head1 COPYRIGHT
-
- Copyright © 2008 Nextel de Mexico S.A. de C.V. 
-
-=encoding utf8
+ Muchos!
+      
+ Se necesitan traductores... !!!
 
 =cut
 # vim: set ts=3 sw=3 sts=3 et si ai:

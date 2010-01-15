@@ -2,19 +2,33 @@
 # vim: set ts=3 sw=3 sts=3 et si ai: 
 # 
 # install.sh -- instalar soya en el directorio
-# --------------------------------------------------------------------
-# (c) 2008 NEXTEL DE MEXICO
+# =-=
+# (c) 2008, 2009 Nextel de Mexico
+# Andrés Aquino Morales <andres.aquino@gmail.com>
 # 
-# César Andrés Aquino <cesar.aquino@nextel.com.mx>
 
 mkdir -p ~/bin
-# si existe, moverlo
+mkdir -p ~/manuals/man1
+
+cd $HOME
+
+# respaldar setup actual
+echo "Migrando configuraciones"
+[ -d ~/soya ] && cp -rp ~/soya/setup/*.conf ~/soya.git/setup/ 
+
+# mover actual como backup
+echo "Se respaldo la anterior configuracion en $HOME/soya.old"
 [ -d ~/soya.old ] && rm -fr ~/soya.old
 [ -d ~/soya ] && mv ~/soya ~/soya.old
+
+# instalar nuevo componente
 [ -d ~/soya.git ] && mv ~/soya.git ~/soya
-[ -d ~/soya.oldi/setup ] && cp -rp ~/soya.old/setup/* ~/soya/setup/ 
-chmod 0750 ~/soya/soya.sh
-ln -sf ~/soya/soya.sh ~/bin/soya
+
+# copiar manual
+echo "Siempre podras consultar el manual con: man soya"
+cp ~/soya/man1/soya.1 ~/manuals/man1/
+
+# establecer nuevo path
 PATH=$HOME/bin:$PATH
 
 #

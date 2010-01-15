@@ -1,0 +1,15 @@
+  ___ ___ _  _ __ _ 
+ (_-</ _ \ || / _` |
+ /__/\___/\_, \__,_|
+          |__/      
+SOI Platform Applications Container
+=-=
+
+COMO INSTALAR ?
+
+ 1. Bajar el paquete soya-2.01Stable.tar.gz
+ 2. Descomprimir
+ 3. Ejecutar el script: install.sh
+ 4. Verificar instalación: sh soya.version
+    ... enjoy !
+

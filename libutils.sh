@@ -2,10 +2,9 @@
 # vim: set ts=3 sw=3 sts=3 et si ai: 
 
 # libutils.sh -- library with some util functions
-# ---------------------------------------------------------------------------- 
-# (c) 2009 Nextel de México S.A. de C.V.
+# =-=
+# (c) 2008, 2009 Nextel de Mexico
 # Andrés Aquino Morales <andres.aquino@gmail.com>
-# All rights reserved.
 # 
 
 #
