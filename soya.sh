@@ -1,10 +1,10 @@
 #!/bin/sh
 # vim: set ts=2 sw=2 sts=2 si ai: 
 
-# soya.sh -- SOI Applications
+# soya.sh - SOI Platform Applications Container
 # =-=
 # (c) 2008, 2009 Nextel de Mexico
-# Andrés Aquino Morales <andres.aquino@gmail.com>
+# Andres Aquino Morales <andres.aquino@gmail.com>
 # 
 
 # get application Name and Action
@@ -236,7 +236,7 @@ case ${apAction}  in
 		# sh ../playground/changelog.sh -> git log > CHANGELOG
 		VERSIONAPP="2"
 		UPVERSION=`echo ${VERSIONAPP} | sed -e "s/..$//g"`
-		RLVERSION=`awk '/200/{t=substr($2,6,7);gsub("-",".",t);print t}' ${apHome}/CHANGELOG | head -n1`
+		RLVERSION=`awk '/2010/{t=substr($1,6,7);gsub("-",".",t);print t}' ${apHome}/CHANGELOG | head -n1`
 		echo "${apAppName} v${UPVERSION}.${RLVERSION}"
 		echo "(c) 2009 Nextel de Mexico S.A. de C.V."
 		
