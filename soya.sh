@@ -32,7 +32,6 @@ get_enviroment
 apAction=`basename ${0#*.} | tr "[:upper:]" "[:lower:]"`
 apHost=`hostname | tr "[:upper:]" "[:lower:]" | sed -e "s/m.*hp//g"`
 apLog=${apLog}/${apName}
-apTemp=${apLog}
 
 # virtual terminal name
 scrPrcs=`echo ${apName} | sed -e "s/[a-zA-Z\.]/0/g;s/.*\([0-9][0-9]\)$/\1/g"`
@@ -40,7 +39,7 @@ scrName=`echo "$(echo "${apHost}____" | cut -c 1-4)" | tr "[:lower:]" "[:upper:]
 scrName="${scrName}${apType}${scrPrcs}"
 
 get_enviroment 
-pidfile=${apTemp}/${0%.*}.pid
+pidfile=/tmp/${0%.*}.pid
 
 ##
 executeCmd () {
@@ -72,24 +71,24 @@ get_tree_of_applications () {
 	[ ! -e $pidfile ] && log_action "ERR" "${scrName} process doesn't exist!" && exit 1 
 
 	p=`cat $pidfile | sort -n | head -n1`
-	echo $p > ${apTemp}/${scrName}.proc
+	echo $p > /tmp/${scrName}.proc
 	while true
 	do
 		case "${systemSO}" in
 			"HP-UX")
-				proc=`cat ${apTemp}/pslist | awk -v pp=$p '{if ($5 ~ pp){print $4}}' 2> /dev/null | sed -e "s/ *//g"`
+				proc=`cat /tmp/pslist | awk -v pp=$p '{if ($5 ~ pp){print $4}}' 2> /dev/null | sed -e "s/ *//g"`
 				;;
 			"Linux")
-				proc=`cat ${apTemp}/pslist | awk -v pp=$p '{if ($4 ~ pp){print $3}}' 2> /dev/null | sed -e "s/ *//g"`
+				proc=`cat /tmp/pslist | awk -v pp=$p '{if ($4 ~ pp){print $3}}' 2> /dev/null | sed -e "s/ *//g"`
 				;;
 		esac
 		
 		[ "x$proc" = "x" ] && break
 		
 		p=$proc
-		echo $proc >> ${apTemp}/${nameProcess}.proc
+		echo $proc >> /tmp/${nameProcess}.proc
 	done
-	sort -n ${apTemp}/${nameProcess}.proc > ${apTemp}/${nameProcess}.list
+  sort -n /tmp/${nameProcess}.proc > /tmp/${nameProcess}.list
 
 }
 
@@ -105,7 +104,8 @@ then
 	[ "x$?" = "x0" ] && log_action "ERR" "Another ${scrName} virtual terminal process exist!" && exit 1 
 	
 	# backup
-	mv ${apLog}.log ${apLog}_${scrName}.log.`date '+%H%M'` > /dev/null 2>&1
+	mkdir -p ${apHome}/log/${apDate}
+	mv ${apLog}.log ${apHome}/log/${apDate}/${scrName}.log.`date '+%H%M'` > /dev/null 2>&1
 
 	#
 	cd ${apHome}/setup/
@@ -139,14 +139,14 @@ then
 	#
 	echo "Execution's tree"
 	pos=
-	for PID in $(cat ${apTemp}/${scrName}.list)
+	for PID in $(cat /tmp/${scrName}.list)
 	do
 		 case "${systemSO}" in
 			"HP-UX")
-				pname=`cat ${apTemp}/pslist | awk -v pp=$PID '{if ($4 ~ pp){print $0}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null` 
+				pname=`cat /tmp/pslist | awk -v pp=$PID '{if ($4 ~ pp){print $0}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null` 
 				;;
 			"Linux")
-				pname=`cat ${apTemp}/pslist | awk -v pp=$PID '{if ($3 ~ pp){print $0}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null`
+				pname=`cat /tmp/pslist | awk -v pp=$PID '{if ($3 ~ pp){print $0}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null`
 				;;
 		esac
 		echo "${pos} '- (${PID})${pname}"
@@ -174,7 +174,7 @@ then
 		screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "exit\015")"
 		wait_for "Stoping process " 14
 		
-		awk '{print "kill -9 "$1}' ${apTemp}/${scrName}.list | sh > /dev/null 2>&1
+    awk '{print "kill -9 "$1}' /tmp/${scrName}.list | sh > /dev/null 2>&1
 		log_action "INFO" "Process ${scrName} finalized "
 	fi
 	exit 0
