@@ -10,12 +10,14 @@
 mkdir -p ~/bin
 mkdir -p ~/manuals/man1
 
-cd $HOME
-
 # respaldar setup actual
+cd ~
 echo "Migrando configuraciones"
 [ -d ~/soya ] && cp -rp ~/soya/setup/*.conf ~/soya.git/setup/ 
+cd ~/soya.git/setup/
+for ap in *.conf do; ln -sf ../soya.sh ${ap%.conf};done
 
+cd ~
 # mover actual como backup
 echo "Se respaldo la anterior configuracion en $HOME/soya.old"
 [ -d ~/soya.old ] && rm -fr ~/soya.old
