@@ -1,5 +1,22 @@
 
+2010-01-22  Andres Aquino <andres.aquino@gmail.com>
+
+        * ed2a85e: liga para que funcione el soya.version
+
+        * 9840d28: se agrega el exit como un OR en la ejecucion de un comando al START
+
+
 2010-01-15  Andres Aquino <andres.aquino@gmail.com>
+
+        * dafc8ee: se define el log
+
+        * d2c13b1: se considera un ciclo para dar de alta las aplicaciones a migrar
+
+        * e294e2a: propiedades del SCREEN
+
+        * 911fdf7: leyendas de usuario y nombre de aplicacion
+
+        * 25f1f15: 1001FX001: Registro de cambios, status:closed
 
         * d86a467: la migracion de configuraciones ya funciona correctamente
 
