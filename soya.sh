@@ -29,6 +29,7 @@ cd ${apHome}
 
 #
 get_enviroment
+cd ${apHome}/setup/
 apAction=`basename ${0#*.} | tr "[:upper:]" "[:lower:]"`
 apHost=`hostname | tr "[:upper:]" "[:lower:]" | sed -e "s/m.*hp//g"`
 apLog=${apLog}/${apName}
@@ -108,7 +109,6 @@ then
 	mv ${apLog}.log ${apHome}/log/${apDate}/${scrName}.log.`date '+%H%M'` > /dev/null 2>&1
 
 	#
-	cd ${apHome}/setup/
 	. ${apName}.conf
 	screen -d -m -S ${scrName}
 	screen -r ${scrName} -p 0 -X log off
@@ -118,7 +118,7 @@ then
 	wait_for "Starting ${scrName} virtual terminal " 6
 	
 	#
-	screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "${apCommand}\015")"
+	screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "${apCommand} || exit\015")"
 	wait_for "Starting process " 8
 	log_action "INFO" "Process ${apType} running in background "
 
@@ -236,10 +236,10 @@ case ${apAction}  in
 		# sh ../playground/changelog.sh -> git log > CHANGELOG
 		VERSIONAPP="2"
 		UPVERSION=`echo ${VERSIONAPP} | sed -e "s/..$//g"`
-		RLVERSION=`awk '/2010/{t=substr($1,6,7);gsub("-",".",t);print t}' ${apHome}/CHANGELOG | head -n1`
+		RLVERSION=`awk '/2010/{t=substr($1,6,7);gsub("-"," Rev.",t);print t}' ${apHome}/CHANGELOG | head -n1`
 		echo "${apAppName} v${UPVERSION}.${RLVERSION}"
-		echo "(c) 2009 Nextel de Mexico S.A. de C.V."
-		
+		echo "(c) 2008, 2009 Nextel de Mexico, S.A. de C.V.\n"
+
 		if [ "${TTYTYPE}" = "CONSOLE" ]
 		then 
 			echo "\nWritten by"
