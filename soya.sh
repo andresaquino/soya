@@ -172,7 +172,7 @@ then
 	else
 		screen -r ${scrName} -p 0 -X log off
 		screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "exit\015")"
-		wait_for "Stoping process " 14
+		wait_for "Stopping process " 14
 		
     awk '{print "kill -9 "$1}' /tmp/${scrName}.list | sh > /dev/null 2>&1
 		log_action "INFO" "Process ${scrName} finalized "
