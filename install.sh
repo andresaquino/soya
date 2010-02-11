@@ -18,7 +18,6 @@ cd ~/soya.git/setup/
 for ap in *.conf; do ln -sf ../soya.sh ${ap%.conf}.stop;done
 for ap in *.conf; do ln -sf ../soya.sh ${ap%.conf}.start;done
 for ap in *.conf; do ln -sf ../soya.sh ${ap%.conf}.check;done
-ln -sf ../soya.conf .
 
 cd ~
 # mover actual como backup
@@ -33,6 +32,7 @@ echo "Se respaldo la anterior configuracion en $HOME/soya.old"
 echo "Siempre podras consultar el manual con: man soya"
 cp ~/soya/man1/soya.1 ~/manuals/man1/
 
+ln -sf ~/soya/soyarc ~/.soyarc
 ln -sf ~/soya/screenrc ~/.screenrc
 
 # establecer nuevo path
