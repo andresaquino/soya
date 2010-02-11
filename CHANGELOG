@@ -1,5 +1,29 @@
 
+2010-02-11  Andres Aquino <andres.aquino@gmail.com>
+
+        * 0af84f8: cambios menores, opciones validas listas para produccion ;-)
+
+        * 02f3dbd: se valida que no use soya.conf y use los comandos correctos especificados en soyarc
+
+        * 967e27a: se adecua para el link del soyarc
+
+        * 5149c90: se agrega el build del link sobre el soyarc
+
+        * 9fc4b8f: se elimina el soya.conf, se queda el soyarc. Se quitan aplicaciones test y se agrega el VERSION
+
+        * 7b1d7c8: adecuaciones con libutils asi como correcciones en ejecucion de comandos..
+
+        * fc5f719: biblioteca compartida del monopse :)
+
+
+2010-01-24  Andres Aquino <andres.aquino@gmail.com>
+
+        * 768613f: correcion etiquetas
+
+
 2010-01-22  Andres Aquino <andres.aquino@gmail.com>
+
+        * e8dd9e9: registro de cambios y log
 
         * ed2a85e: liga para que funcione el soya.version
 
