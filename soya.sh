@@ -7,242 +7,235 @@
 # Andres Aquino Morales <andres.aquino@gmail.com>
 # 
 
-# get application Name and Action
-apAppName="soya"
-apHome=${HOME}/soya
-apDir=`dirname ${PWD}/${0}`
-apName=`basename ${0%.*}`
-apDebug="on"
-scrPrcs=0
-
-# move to application home directory
-cd ${apHome}
-
-# i need a config file...
-[ ! -e ${apHome}/soya.conf ] && echo "hey!, i need a config file like soya.conf" && exit 1
-[ ! -e ${apHome}/setup/${apName}.conf ] && echo "hey!, i need a config file like ${apHome}/setup/${apName}.conf" && exit 1
-
-# settings, setup & libraries
-. ${apHome}/soya.conf
-. ${apHome}/libutils.sh
-. ${apHome}/setup/${apName}.conf
-
 #
-get_enviroment
-cd ${apHome}/setup/
-apAction=`basename ${0#*.} | tr "[:upper:]" "[:lower:]"`
-apHost=`hostname | tr "[:upper:]" "[:lower:]" | sed -e "s/m.*hp//g"`
-apLog=${apLog}/${apName}
+# default enviroment
+APNAME="soya"
+APLINK=`basename ${0%.*}`
+APPATH="${HOME}/${APNAME}"
+APLOGD="${HOME}/logs"
+APLEVL="DEBUG"
+APTYPE="AP"
+VIEWLOG=false
+VIEWMLOG=false
+APDEBUG=false
+
+SCRPRCS=0
+VERSION="`cat ${APPATH}/VERSION | sed -e 's/-rev/ Rev./g'`"
+RELEASE=`openssl dgst -md5 ${APPATH}/${APNAME}.sh | rev | cut -c-4 | rev`
+
+# user enviroment
+. ${HOME}/.${APNAME}rc
+
+# load user functions
+. ${APPATH}/libutils.sh
+set_environment
+
+# load application parameter
+. ${APPATH}/setup/${APLINK}.conf
 
 # virtual terminal name
-scrPrcs=`echo ${apName} | sed -e "s/[a-zA-Z\.]/0/g;s/.*\([0-9][0-9]\)$/\1/g"`
-scrName=`echo "$(echo "${apHost}____" | cut -c 1-4)" | tr "[:lower:]" "[:upper:]"`
-scrName="${scrName}${apType}${scrPrcs}"
+APACTION=`basename ${0#*.} | tr "[:lower:]" "[:upper:]"`
+log_action "DEBUG" "Using ${APACTION} with soya"
 
-get_enviroment 
-pidfile=/tmp/${0%.*}.pid
+SCRPRCS=`echo ${APLINK} | sed -e "s/[a-zA-Z\.-]/0/g;s/.*\([0-9][0-9]\)$/\1/g"`
+SCRNAME=`echo ${APHOST} | sed -e "s/m.*hp//g;s/$/_______/g" | cut -c 1-4`
+SCRNAME=`echo ${SCRNAME}${APTYPE}${SCRPRCS} | tr "[:lower:]" "[:upper:]"`
+
+#
+set_proc "${SCRNAME}"
+get_process_id "${SCRNAME},SCREEN"
+
 
 ##
 executeCmd () {
-	local strCommand=${1}
+	local STRCOMMAND=${1}
 
 	# eliminar referencias nulas del screen
-	screen -wipe > /dev/null 2&>1
+	${SCREEN} -wipe > /dev/null 2&>1
 
-	# si no hay otro proceso
-	screen -ls | grep ${scrName} > /dev/null 2>&1
-	[ "x$?" != "x0" ] && log_action "ERR" "${scrName} virtual terminal process doesn't exist!" && exit 1 
+	# verificar si ya existe una terminal
+	process_running
+	[ ! -s ${APLOGT}.pid ] && report_status "i" "Wops, another ${SCRNAME} virtual terminal process exist!"
+	[ ! -s ${APLOGT}.pid ] && log_action "DEBUG" "Wops, another ${SCRNAME} virtual terminal process exist!"
+	[ ! -s ${APLOGT}.pid ] && exit 1
 
 	# ejecutar el comando
-	screen -x ${scrName} -p 0 -X stuff "$(printf '%b' "${strCommand}\015")"
-	wait_for "Executing command ${strCommand} on ${scrName} " 2
+	log_action "DEBUG" "Executing ${STRCOMMAND} in screen ${SCRNAME}"
+	${SCREEN} -x ${SCRNAME} -p 0 -X stuff "$(printf '%b' "${STRCOMMAND}\015")"
+	wait_for "Executing command ${STRCOMMAND} on ${SCRNAME} " 2
 
 	# reportar el estado de la ejecucion
-	log_action "INFO" "${strCommand} on ${scrName} cooked, go home baby! "
+	log_action "DEBUG" "${STRCOMMAND} on ${SCRNAME} cooked, go home baby! "
  
 }
 
 ##
 get_tree_of_applications () {
-	local nameProcess=${1}
+	process_running
+	[ ! -s ${APLOGT}.pid ] && log_action "ERR" "${SCRNAME} process doesn't exist!" && exit 1 
 
-	rm -f $pidfile
-	get_process_id "$nameProcess"
-
-	[ ! -e $pidfile ] && log_action "ERR" "${scrName} process doesn't exist!" && exit 1 
-
-	p=`cat $pidfile | sort -n | head -n1`
-	echo $p > /tmp/${scrName}.proc
+	cat ${APLOGT}.pid | sort -n | head -n1 > ${APLOGT}.proc
 	while true
 	do
-		case "${systemSO}" in
-			"HP-UX")
-				proc=`cat /tmp/pslist | awk -v pp=$p '{if ($5 ~ pp){print $4}}' 2> /dev/null | sed -e "s/ *//g"`
-				;;
-			"Linux")
-				proc=`cat /tmp/pslist | awk -v pp=$p '{if ($4 ~ pp){print $3}}' 2> /dev/null | sed -e "s/ *//g"`
-				;;
-		esac
-		
-		[ "x$proc" = "x" ] && break
-		
-		p=$proc
-		echo $proc >> /tmp/${nameProcess}.proc
+		APID=`tail -n1 ${APLOGT}.proc`
+		APPID=`cat ${APLOGT}.allps | awk -v pid=${APID} -v pos=${PSPOS} '{if ($(4+pos) ~ pid){print $(3+pos)}}' 2> /dev/null | sed -e "s/ *//g"`
+		[ ${#APPID} -eq 0 ] && break
+		echo ${APPID} >> ${APLOGT}.proc
 	done
-  sort -n /tmp/${nameProcess}.proc > /tmp/${nameProcess}.list
+  sort -n ${APLOGT}.proc > ${APLOGT}.list
 
 }
 
 
 # START
-if [ ${apAction} = "start" ]
+if [ ${APACTION} = "START" ]
 then
 
 	# eliminar referencias nulas del screen
-	screen -wipe > /dev/null 2>&1
+	${SCREEN} -wipe > /dev/null 2>&1
 
-	screen -ls | grep ${scrName} > /dev/null 2>&1
-	[ "x$?" = "x0" ] && log_action "ERR" "Another ${scrName} virtual terminal process exist!" && exit 1 
-	
+	# determinar procesos a terminar
+	process_running
+
+	# verificar si ya existe una terminal
+	[ -s ${APLOGT}.pid ] && report_status "i" "Wops, another ${SCRNAME} virtual terminal process exist!"
+	[ -s ${APLOGT}.pid ] && log_action "DEBUG" "Wops, another ${SCRNAME} virtual terminal process exist!"
+	[ -s ${APLOGT}.pid ] && exit 1
+
 	# backup
-	mkdir -p ${apHome}/log/${apDate}
-	mv ${apLog}.log ${apHome}/log/${apDate}/${scrName}.log.`date '+%H%M'` > /dev/null 2>&1
+	mkdir -p ${APTEMP}/${APDATE}
+	mv ${APLOGP}.log ${APTEMP}/${APDATE}/${APPRCS}_${APHOUR}.log > /dev/null 2>&1
+	log_action "DEBUG" "Backuping ${APLOGP}.log as ${APTEMP}/${APDATE}/${APPRCS}_${APHOUR}.log"
 
 	#
-	. ${apName}.conf
-	screen -d -m -S ${scrName}
-	screen -r ${scrName} -p 0 -X log off
-	screen -r ${scrName} -p 0 -X logfile ${apLog}.log
-	screen -r ${scrName} -p 0 -X logfile flush 10
-	screen -r ${scrName} -p 0 -X log ${apDebug}
-	wait_for "Starting ${scrName} virtual terminal " 6
+	${SCREEN} -d -m -S ${SCRNAME}
+	${SCREEN} -r ${SCRNAME} -p 0 -X log off
+	${SCREEN} -r ${SCRNAME} -p 0 -X logfile ${APLOGP}.log
+	${SCREEN} -r ${SCRNAME} -p 0 -X logfile flush 10
+	${SCREEN} -r ${SCRNAME} -p 0 -X log ${APDEBUG}
+	log_action "DEBUG" "Creating VirtualTerminal ${SCRNAME}, logfile as ${APLOGP}.log in mode ${APDEBUG}"
+	wait_for "Starting ${SCRNAME} virtual terminal " 3
 	
 	#
-	screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "${apCommand} || exit\015")"
+	${SCREEN} -r ${SCRNAME} -p 0 -X stuff "$(printf '%b' "${APCOMMAND} || exit\015")"
+	log_action "DEBUG" "Send the command [${APCOMMAND}] in ${SCRNAME}"
 	wait_for "Starting process " 8
-	log_action "INFO" "Process ${apType} running in background "
 
 	# get the tree applications
-	get_tree_of_applications ${scrName}
-
-	exit 0
+	process_running
+	[ -s ${APLOGT}.pid ] && report_status "*" "VirtualTermina process ${APPRCS} is running right now" ||
+	                        report_status "?" "VirtualTermina process ${APPRCS} failed to initialize"
 
 fi
 
+
 # CHECK
-if [ ${apAction} = "check" ]
+if [ ${APACTION} = "CHECK" ]
 then
 
 	# determinar procesos a terminar
-	get_tree_of_applications ${scrName}
+	get_tree_of_applications 
 
 	#
 	echo "Execution's tree"
-	pos=
-	for PID in $(cat /tmp/${scrName}.list)
+	pos=" "
+	for APID in $(cat ${APLOGT}.list)
 	do
-		 case "${systemSO}" in
-			"HP-UX")
-				pname=`cat /tmp/pslist | awk -v pp=$PID '{if ($4 ~ pp){print $0}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null` 
-				;;
-			"Linux")
-				pname=`cat /tmp/pslist | awk -v pp=$PID '{if ($3 ~ pp){print $0}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null`
-				;;
-		esac
-		echo "${pos} '- (${PID})${pname}"
-		[ "x${pos}" = "x" ] && pos=" "
+		PNAME=`cat ${APLOGT}.allps | awk -v pid=${APID} -v pos=${PSPOS} '{if ($(3+pos) ~ pid){print}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null`
+		[ ${#pos} -gt 0 ] && pos="${pos} "
+		[ ${#pos} -eq 1 ] && index="${pos}+" || index="${pos}'-"
+		echo "[${APID}  ] ${index} ${PNAME}"
 	done
 
 fi
 
  
 # STOP
-if [ ${apAction} = "stop" ]
+if [ ${APACTION} = "STOP" ]
 then
 
 	# determinar procesos a terminar
-	get_tree_of_applications ${scrName}
+	process_running
 
-	# si no hay otro proceso
-	screen -ls | grep ${scrName} > /dev/null 2>&1
-	if [ "x$?" != "x0" ] 
-	then
-		log_action "ERR" "OMFG...! Nothing to stop man. "
-		exit 1
-	else
-		screen -r ${scrName} -p 0 -X log off
-		screen -r ${scrName} -p 0 -X stuff "$(printf '%b' "exit\015")"
-		wait_for "Stopping process " 14
-		
-    awk '{print "kill -9 "$1}' /tmp/${scrName}.list | sh > /dev/null 2>&1
-		log_action "INFO" "Process ${scrName} finalized "
-	fi
-	exit 0
+	# verificar si ya existe una terminal
+	[ ! -s ${APLOGT}.pid ] && report_status "i" "Hey, VirtualTerminal ${SCRNAME} doesnt exists..."
+	[ ! -s ${APLOGT}.pid ] && log_action "DEBUG" "Hey, VirtualTerminal ${SCRNAME} doesnt exists..."
+	[ ! -s ${APLOGT}.pid ] && exit 1
+
+	${SCREEN} -r ${SCRNAME} -p 0 -X log off
+	${SCREEN} -r ${SCRNAME} -p 0 -X stuff "$(printf '%b' "exit\015")"
+	log_action "DEBUG" "Sending the exit command"
+	wait_for "Stopping process " 8
+
+	for APID in $(cat ${APLOGT}.list | sort -r)
+	do
+		kill -0 ${APID} > /dev/null 2>&1
+		LASTSTATUS=$?
+		PNAME=`cat ${APLOGT}.allps | awk -v pid=${APID} -v pos=${PSPOS} '{if ($(3+pos) ~ pid){print}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null`
+		[ $LASTSTATUS -eq 0 ] && $(kill -9 ${APID} > /dev/null 2>&1)
+		[ $LASTSTATUS -eq 0 ] && log_action "DEBUG" "Process ${PNAME} finalized "
+	done
+	report_status "*" "VirtualTerminal process ${SCRNAME} and subprocesses finalized"
 
 fi
 
 # cualquier otro comando ...
 # app.logsOn | app.logsOff | app.backUp | app.logsClear 
-case ${apAction}  in
-	logson)
-		executeCmd "${apLogsOn}"
+case ${APACTION}  in
+	LOGSON)
+		executeCmd "${APLOGsOn}"
 		exit 0
 		;;
 
-	logsoff)
-		executeCmd "${apLogsOff}"
+	LOGSOFF)
+		executeCmd "${APLOGsOff}"
 		exit 0
 		;;
 
-	syslogson)
+	SYSLOGSON)
 		executeCmd "${apSyslogsOn}"
 		exit 0
 		;;
 
-	syslogsoff)
+	SYSLOGSOFF)
 		executeCmd "${apSyslogsOff}"
 		exit 0
 		;;
 
-	dblogson)
+	DBLOGSON)
 		executeCmd "${apDBlogsOn}"
 		exit 0
 		;;
 
-	dblogsoff)
+	DBLOGSOFF)
 		executeCmd "${apDBlogsOff}"
 		exit 0
 		;;
 
-	backup)
+	BACKUP)
 		executeCmd "${apBackUp}"
 		exit 0
 		;;
 
-	logsclear)
-		executeCmd "${apLogsClear}"
+	LOGSCLEAR)
+		executeCmd "${APLOGsClear}"
 		exit 0
 		;;
 
-	getlevel)
+	GETLEVEL)
 		executeCmd "${apLevel}"
-		tail -n100 ${apLog}.log | grep "Level for this build" | tail -n1
+		tail -n100 ${APLOG}.log | grep "Level for this build" | tail -n1
 		exit 0
 		;;
 
-	version)
+	VERSION)
 		#
-		# generar num de release en base al changelog, para no modificar el md5 del script
-		# sh ../playground/changelog.sh -> git log > CHANGELOG
-		VERSIONAPP="2"
-		UPVERSION=`echo ${VERSIONAPP} | sed -e "s/..$//g"`
-		RLVERSION=`awk '/2010/{t=substr($1,6,7);gsub("-"," Rev.",t);print t}' ${apHome}/CHANGELOG | head -n1`
-		echo "${apAppName} v${UPVERSION}.${RLVERSION}"
+		echo "${APNAME} ${VERSION} (${RELEASE})"
 		echo "(c) 2008, 2009 Nextel de Mexico, S.A. de C.V.\n"
 
 		if [ "${TTYTYPE}" = "CONSOLE" ]
 		then 
-			echo "\nWritten by"
+			echo "Written by"
 			echo "Andres Aquino <andres.aquino@gmail.com>"
 		fi	
 		exit 0
