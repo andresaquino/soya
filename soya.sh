@@ -30,9 +30,6 @@ RELEASE=`openssl dgst -md5 ${APPATH}/${APNAME}.sh | rev | cut -c-4 | rev`
 . ${APPATH}/libutils.sh
 set_environment
 
-# load application parameter
-. ${APPATH}/setup/${APLINK}.conf
-
 # virtual terminal name
 APACTION=`basename ${0#*.} | tr "[:lower:]" "[:upper:]"`
 log_action "DEBUG" "Using ${APACTION} with soya"
