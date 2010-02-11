@@ -18,7 +18,6 @@ APTYPE="AP"
 VIEWLOG=false
 VIEWMLOG=false
 APDEBUG=false
-
 SCRPRCS=0
 VERSION="`cat ${APPATH}/VERSION | sed -e 's/-rev/ Rev./g'`"
 RELEASE=`openssl dgst -md5 ${APPATH}/${APNAME}.sh | rev | cut -c-4 | rev`
