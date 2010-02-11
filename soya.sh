@@ -30,6 +30,13 @@ RELEASE=`openssl dgst -md5 ${APPATH}/${APNAME}.sh | rev | cut -c-4 | rev`
 . ${APPATH}/libutils.sh
 set_environment
 
+# application environment
+[ ${APLINK} != ${APNAME} ] && . ${APPATH}/setup/${APLINK}.conf
+
+# workaround
+[ ${#apType} -ne 0 ] && APTYPE=${apType}
+[ ${#apCommand} -ne 0 ] && APCOMMAND=${apCommand}
+
 # virtual terminal name
 APACTION=`basename ${0#*.} | tr "[:lower:]" "[:upper:]"`
 log_action "DEBUG" "Using ${APACTION} with soya"
@@ -40,7 +47,7 @@ SCRNAME=`echo ${SCRNAME}${APTYPE}${SCRPRCS} | tr "[:lower:]" "[:upper:]"`
 
 #
 set_proc "${SCRNAME}"
-get_process_id "${SCRNAME},SCREEN"
+get_process_id "${SCRNAME}"
 
 
 ##
@@ -120,8 +127,8 @@ then
 
 	# get the tree applications
 	process_running
-	[ -s ${APLOGT}.pid ] && report_status "*" "VirtualTermina process ${APPRCS} is running right now" ||
-	                        report_status "?" "VirtualTermina process ${APPRCS} failed to initialize"
+	[ -s ${APLOGT}.pid ] && report_status "*" "Process [${APCOMMAND}] running in ${APPRCS} right now" ||
+	                        report_status "?" "Process [${APCOMMAND}] in ${APPRCS} failed to initialize"
 
 fi
 
@@ -180,47 +187,47 @@ fi
 # app.logsOn | app.logsOff | app.backUp | app.logsClear 
 case ${APACTION}  in
 	LOGSON)
-		executeCmd "${APLOGsOn}"
+		executeCmd "${APLOGSOn}"
 		exit 0
 		;;
 
 	LOGSOFF)
-		executeCmd "${APLOGsOff}"
+		executeCmd "${APLOGSOFF}"
 		exit 0
 		;;
 
 	SYSLOGSON)
-		executeCmd "${apSyslogsOn}"
+		executeCmd "${APSYSLOGSON}"
 		exit 0
 		;;
 
 	SYSLOGSOFF)
-		executeCmd "${apSyslogsOff}"
+		executeCmd "${APSYSLOGSOFF}"
 		exit 0
 		;;
 
 	DBLOGSON)
-		executeCmd "${apDBlogsOn}"
+		executeCmd "${APDBLOGSON}"
 		exit 0
 		;;
 
 	DBLOGSOFF)
-		executeCmd "${apDBlogsOff}"
+		executeCmd "${APDBLOGSOFF}"
 		exit 0
 		;;
 
 	BACKUP)
-		executeCmd "${apBackUp}"
+		executeCmd "${APBACKUP}"
 		exit 0
 		;;
 
 	LOGSCLEAR)
-		executeCmd "${APLOGsClear}"
+		executeCmd "${APLOGSCLEAR}"
 		exit 0
 		;;
 
 	GETLEVEL)
-		executeCmd "${apLevel}"
+		executeCmd "${APLEVEL}"
 		tail -n100 ${APLOG}.log | grep "Level for this build" | tail -n1
 		exit 0
 		;;
