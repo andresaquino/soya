@@ -117,12 +117,12 @@ then
 	${SCREEN} -r ${SCRNAME} -p 0 -X logfile flush 10
 	${SCREEN} -r ${SCRNAME} -p 0 -X log ${APDEBUG}
 	log_action "DEBUG" "Creating VirtualTerminal ${SCRNAME}, logfile as ${APLOGP}.log in mode ${APDEBUG}"
-	wait_for "Starting ${SCRNAME} virtual terminal " 3
+	wait_for "Starting ${SCRNAME} virtual terminal " 2
 	
 	#
 	${SCREEN} -r ${SCRNAME} -p 0 -X stuff "$(printf '%b' "${APCOMMAND} || exit\015")"
 	log_action "DEBUG" "Send the command [${APCOMMAND}] in ${SCRNAME}"
-	wait_for "Starting process " 8
+	wait_for "Starting process " 2
 
 	# get the tree applications
 	process_running
@@ -168,7 +168,7 @@ then
 	${SCREEN} -r ${SCRNAME} -p 0 -X log off
 	${SCREEN} -r ${SCRNAME} -p 0 -X stuff "$(printf '%b' "exit\015")"
 	log_action "DEBUG" "Sending the exit command"
-	wait_for "Stopping process " 8
+	wait_for "Stopping process " 2
 
 	for APID in $(cat ${APLOGT}.list | sort -r)
 	do
