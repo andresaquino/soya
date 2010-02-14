@@ -21,6 +21,8 @@ APDEBUG=false
 SCRPRCS=0
 VERSION="`cat ${APPATH}/VERSION | sed -e 's/-rev/ Rev./g'`"
 RELEASE=`openssl dgst -md5 ${APPATH}/${APNAME}.sh | rev | cut -c-4 | rev`
+SCRPRCS=`echo ${APLINK} | sed -e "s/[a-zA-Z\.-]/0/g;s/.*\([0-9][0-9]\)$/\1/g"`
+APTYPE=`grep -i aptype ${APLINK}.conf | sed -e "s/.*=//g" 2> /dev/null`
 
 # user enviroment
 . ${HOME}/.${APNAME}rc
@@ -29,24 +31,24 @@ RELEASE=`openssl dgst -md5 ${APPATH}/${APNAME}.sh | rev | cut -c-4 | rev`
 . ${APPATH}/libutils.sh
 set_environment
 
+# virtual terminal name
+APACTION=`basename ${0#*.} | tr "[:lower:]" "[:upper:]"`
+SCRNAME=`echo ${APHOST} | sed -e "s/m.*hp//g;s/$/_______/g" | cut -c 1-4`
+SCRNAME=`echo ${SCRNAME}${APTYPE}${SCRPRCS} | tr "[:lower:]" "[:upper:]"`
+
 # application environment
 [ ${APLINK} != ${APNAME} ] && . ${APPATH}/setup/${APLINK}.conf
 
 # workaround
 [ ${#apType} -ne 0 ] && APTYPE=${apType}
 [ ${#apCommand} -ne 0 ] && APCOMMAND=${apCommand}
-
-# virtual terminal name
-APACTION=`basename ${0#*.} | tr "[:lower:]" "[:upper:]"`
-log_action "DEBUG" "Using ${APACTION} with soya"
-
-SCRPRCS=`echo ${APLINK} | sed -e "s/[a-zA-Z\.-]/0/g;s/.*\([0-9][0-9]\)$/\1/g"`
-SCRNAME=`echo ${APHOST} | sed -e "s/m.*hp//g;s/$/_______/g" | cut -c 1-4`
-SCRNAME=`echo ${SCRNAME}${APTYPE}${SCRPRCS} | tr "[:lower:]" "[:upper:]"`
+scrPrcs=${SCRPRCS}
+scrName=${SCRNAME}
 
 #
-set_proc "${SCRNAME}"
+#set_proc "${SCRNAME}"
 get_process_id "${SCRNAME}"
+log_action "DEBUG" "You're using ${APNAME} ${VERSION} release ${RELEASE}"
 
 
 ##
@@ -58,14 +60,14 @@ executeCmd () {
 
 	# verificar si ya existe una terminal
 	process_running
-	[ ! -s ${APLOGT}.pid ] && report_status "i" "Wops, another ${SCRNAME} virtual terminal process exist!"
-	[ ! -s ${APLOGT}.pid ] && log_action "DEBUG" "Wops, another ${SCRNAME} virtual terminal process exist!"
+	[ ! -s ${APLOGT}.pid ] && report_status "i" "Hey, VirtualTerminal ${SCRNAME} doesnt exists..."
+	[ ! -s ${APLOGT}.pid ] && log_action "DEBUG" "Hey, VirtualTerminal ${SCRNAME} doesnt exists..."
 	[ ! -s ${APLOGT}.pid ] && exit 1
 
 	# ejecutar el comando
 	log_action "DEBUG" "Executing ${STRCOMMAND} in screen ${SCRNAME}"
 	${SCREEN} -x ${SCRNAME} -p 0 -X stuff "$(printf '%b' "${STRCOMMAND}\015")"
-	wait_for "Executing command ${STRCOMMAND} on ${SCRNAME} " 2
+	wait_for "Executing command ${STRCOMMAND} on ${SCRNAME} " 4
 
 	# reportar el estado de la ejecucion
 	log_action "DEBUG" "${STRCOMMAND} on ${SCRNAME} cooked, go home baby! "
@@ -81,7 +83,7 @@ get_tree_of_applications () {
 	while true
 	do
 		APID=`tail -n1 ${APLOGT}.proc`
-		APPID=`cat ${APLOGT}.allps | awk -v pid=${APID} -v pos=${PSPOS} '{if ($(4+pos) ~ pid){print $(3+pos)}}' 2> /dev/null | sed -e "s/ *//g"`
+		APPID=`awk -v pid=${APID} -v pos=${PSPOS} '{if ($(4+pos) ~ pid){print $(3+pos)}}' ${APLOGT}.allps 2> /dev/null | sed -e "s/ *//g"`
 		[ ${#APPID} -eq 0 ] && break
 		echo ${APPID} >> ${APLOGT}.proc
 	done
@@ -117,17 +119,17 @@ then
 	${SCREEN} -r ${SCRNAME} -p 0 -X logfile flush 10
 	${SCREEN} -r ${SCRNAME} -p 0 -X log ${APDEBUG}
 	log_action "DEBUG" "Creating VirtualTerminal ${SCRNAME}, logfile as ${APLOGP}.log in mode ${APDEBUG}"
-	wait_for "Starting ${SCRNAME} virtual terminal " 3
+	wait_for "Starting ${SCRNAME} virtual terminal " 2
 	
 	#
 	${SCREEN} -r ${SCRNAME} -p 0 -X stuff "$(printf '%b' "${APCOMMAND} || exit\015")"
 	log_action "DEBUG" "Send the command [${APCOMMAND}] in ${SCRNAME}"
-	wait_for "Starting process " 8
+	wait_for "Starting process " 2
 
 	# get the tree applications
 	process_running
-	[ -s ${APLOGT}.pid ] && report_status "*" "Process [${APCOMMAND}] running in ${APPRCS} right now" ||
-	                        report_status "?" "Process [${APCOMMAND}] in ${APPRCS} failed to initialize"
+	[ -s ${APLOGT}.pid ] && report_status "*" "[${APCOMMAND}] running in ${APPRCS} right now" ||
+	                        report_status "?" "[${APCOMMAND}] in ${APPRCS} failed to initialize"
 
 fi
 
@@ -144,7 +146,7 @@ then
 	pos=" "
 	for APID in $(cat ${APLOGT}.list)
 	do
-		PNAME=`cat ${APLOGT}.allps | awk -v pid=${APID} -v pos=${PSPOS} '{if ($(3+pos) ~ pid){print}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null`
+		PNAME=`awk -v pid=${APID} -v pos=${PSPOS} '{if ($(3+pos) ~ pid){print}}' ${APLOGT}.allps | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null`
 		[ ${#pos} -gt 0 ] && pos="${pos} "
 		[ ${#pos} -eq 1 ] && index="${pos}+" || index="${pos}'-"
 		echo "[${APID}  ] ${index} ${PNAME}"
@@ -168,13 +170,13 @@ then
 	${SCREEN} -r ${SCRNAME} -p 0 -X log off
 	${SCREEN} -r ${SCRNAME} -p 0 -X stuff "$(printf '%b' "exit\015")"
 	log_action "DEBUG" "Sending the exit command"
-	wait_for "Stopping process " 8
+	wait_for "Stopping process " 2
 
 	for APID in $(cat ${APLOGT}.list | sort -r)
 	do
 		kill -0 ${APID} > /dev/null 2>&1
 		LASTSTATUS=$?
-		PNAME=`cat ${APLOGT}.allps | awk -v pid=${APID} -v pos=${PSPOS} '{if ($(3+pos) ~ pid){print}}' | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null`
+		PNAME=`awk -v pid=${APID} -v pos=${PSPOS} '{if ($(3+pos) ~ pid){print}}' ${APLOGT}.allps | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null`
 		[ $LASTSTATUS -eq 0 ] && $(kill -9 ${APID} > /dev/null 2>&1)
 		[ $LASTSTATUS -eq 0 ] && log_action "DEBUG" "Process ${PNAME} finalized "
 	done

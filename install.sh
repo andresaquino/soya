@@ -35,6 +35,9 @@ cp ~/soya/man1/soya.1 ~/manuals/man1/
 ln -sf ~/soya/soyarc ~/.soyarc
 ln -sf ~/soya/screenrc ~/.screenrc
 
+chmod 0640 ~/soya/install.sh 
+chmod 0750 ~/soya/soya.sh
+
 # establecer nuevo path
 PATH=$HOME/bin:$PATH
 
