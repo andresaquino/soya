@@ -243,9 +243,9 @@ get_process_id () {
 		${VIEWMLOG} && report_status "i" "${PIDFILE}.allps < /${WRDSLIST}/ = dawm!"
 		# eliminar archivos ppid, en caso de que el proceso ya no exista
 		log_action "DEBUG" "hey, ${APPRCS} is not running in ${PIDFILE}.ps "
-		rm -f ${PIDFILE}.{pid,ppid} > /dev/null 2>&1
+		rm -f ${PIDFILE}.{pid,ppid} 2> /dev/null
 	fi
-	rm -f ${PIDFILE}.{pss} > /dev/null 2>&1
+	rm -f ${PIDFILE}.{pss} 2> /dev/null 
 }
 
 #
@@ -274,7 +274,7 @@ process_running () {
 		log_action "DEBUG" "${STATUS}"
 		return ${RESULT}
 	else
-		rm -f ${PIDFILE}.* > /dev/null 2>&1
+		rm -f ${PIDFILE}.* 2> /dev/null
 		return 1
 	fi
 }
@@ -296,7 +296,7 @@ processes_running () {
 			kill -0 ${PROCESS} > /dev/null 2>&1
 			RESULT=$?
 			[ ${RESULT} -ne 0 ] && log_action "DEBUG" "${PIDFILE} is not a valid process"
-			[ ${RESULT} -ne 0 ] && rm -f ${PIDFILE} > /dev/null 2>&1
+			[ ${RESULT} -ne 0 ] && rm -f ${PIDFILE} 2> /dev/null 
 			return ${RESULT}
 		fi
 	done

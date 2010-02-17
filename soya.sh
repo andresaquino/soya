@@ -77,17 +77,21 @@ executeCmd () {
 ##
 get_tree_of_applications () {
 	process_running
-	[ ! -s ${APLOGT}.pid ] && log_action "ERR" "${SCRNAME} process doesn't exist!" && exit 1 
-
-	cat ${APLOGT}.pid | sort -n | head -n1 > ${APLOGT}.proc
-	while true
-	do
-		APID=`tail -n1 ${APLOGT}.proc`
-		APPID=`awk -v pid=${APID} -v pos=${PSPOS} '{if ($(4+pos) ~ pid){print $(3+pos)}}' ${APLOGT}.allps 2> /dev/null | sed -e "s/ *//g"`
-		[ ${#APPID} -eq 0 ] && break
-		echo ${APPID} >> ${APLOGT}.proc
-	done
-  sort -n ${APLOGT}.proc > ${APLOGT}.list
+	
+	if [ -s ${APLOGT}.pid ]
+	then
+		cat ${APLOGT}.pid | sort -n | head -n1 > ${APLOGT}.proc
+		while true
+		do
+			APID=`tail -n1 ${APLOGT}.proc`
+			APPID=`awk -v pid=${APID} -v pos=${PSPOS} '{if ($(4+pos) ~ pid){print $(3+pos)}}' ${APLOGT}.allps 2> /dev/null | sed -e "s/ *//g"`
+			[ ${#APPID} -eq 0 ] && break
+			echo ${APPID} >> ${APLOGT}.proc
+		done
+		sort -n ${APLOGT}.proc > ${APLOGT}.list
+	else
+		log_action "ERR" "${SCRNAME} process doesn't exist!"
+	fi
 
 }
 
@@ -100,7 +104,7 @@ then
 	${SCREEN} -wipe > /dev/null 2>&1
 
 	# determinar procesos a terminar
-	process_running
+	get_tree_of_applications
 
 	# verificar si ya existe una terminal
 	[ -s ${APLOGT}.pid ] && report_status "i" "Wops, another ${SCRNAME} virtual terminal process exist!"
@@ -160,7 +164,7 @@ if [ ${APACTION} = "STOP" ]
 then
 
 	# determinar procesos a terminar
-	process_running
+	get_tree_of_applications
 
 	# verificar si ya existe una terminal
 	[ ! -s ${APLOGT}.pid ] && report_status "i" "Hey, VirtualTerminal ${SCRNAME} doesnt exists..."
