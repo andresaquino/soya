@@ -17,12 +17,13 @@ APLEVL="DEBUG"
 APTYPE="AP"
 VIEWLOG=false
 VIEWMLOG=false
-APDEBUG=false
+APDEBUG=off
 SCRPRCS=0
 VERSION="`cat ${APPATH}/VERSION | sed -e 's/-rev/ Rev./g'`"
 RELEASE=`openssl dgst -md5 ${APPATH}/${APNAME}.sh | rev | cut -c-4 | rev`
 SCRPRCS=`echo ${APLINK} | sed -e "s/[a-zA-Z\.-]/0/g;s/.*\([0-9][0-9]\)$/\1/g"`
-APTYPE=`grep -i aptype ${APLINK}.conf | sed -e "s/.*=//g" 2> /dev/null`
+APTYPE="AP"
+[ ${APLINK} != ${APNAME} ] && APTYPE=`grep -i aptype ${APLINK}.conf | sed -e "s/.*=//g" 2> /dev/null`
 
 # user enviroment
 . ${HOME}/.${APNAME}rc
