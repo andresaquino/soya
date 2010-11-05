@@ -1,9 +1,11 @@
 # .screenrc 
-# vim: set ts=3 et sw=3 sts=3 si ai: 
+# vim: set et ts=2 sw=2 sts=2 si ai: 
 
 # .screenrc -- screen rc file configuration
 # =-=
-# Andrés Aquino <andres.aquino@gmail.com>
+# Mainteiner
+# Andres Aquino Morales <aquino@hp.com>
+# 
 
 #
 # let's override 
@@ -30,5 +32,5 @@ caption always '%{= WK}%?%-Lw%?%{K}(%{k}%n*%f%t%?(%u)%?%{K})%{K}%?%+Lw%?%?%= %{k
 
 #
 # Status string, last line
-hardstatus string '%{Wk}%{R}Nextel Telecomunicaciones de Mexico%{= Wk} %100`%120`%= %100`%120`%D|%Y.%m.%d~%0c:%s'
+hardstatus string '%{Wk}%{R}Hewlett-Packard Company%{= Wk} %100`%120`%= %100`%120`%D|%Y.%m.%d~%0c:%s'
 

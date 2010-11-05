@@ -3,9 +3,10 @@
 
 # soya.sh - SOI Platform Applications Container
 # =-=
-# (c) 2008, 2009 Nextel de Mexico
+# Developer
 # Andres Aquino Morales <andres.aquino@gmail.com>
 # 
+
 
 #
 # default enviroment
@@ -154,7 +155,7 @@ then
 		PNAME=`awk -v pid=${APID} -v pos=${PSPOS} '{if ($(3+pos) ~ pid){print}}' ${APLOGT}.allps | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null`
 		[ ${#pos} -gt 0 ] && pos="${pos} "
 		[ ${#pos} -eq 1 ] && index="${pos}+" || index="${pos}'-"
-		echo "[${APID}  ] ${index} ${PNAME}"
+		printto "[${APID}  ] ${index} ${PNAME}"
 	done
 
 fi
@@ -240,13 +241,13 @@ case ${APACTION}  in
 
 	VERSION)
 		#
-		echo "${APNAME} ${VERSION} (${RELEASE})"
-		echo "(c) 2008, 2009 Nextel de Mexico, S.A. de C.V.\n"
+		printto "${APNAME} ${VERSION} (${RELEASE})"
+		printto "(c) 2010 ${APPROF}\n"
 
 		if [ "${TTYTYPE}" = "CONSOLE" ]
 		then 
-			echo "Written by"
-			echo "Andres Aquino <andres.aquino@gmail.com>"
+			printto  "Developed by"
+			printto  "Andres Aquino <andres.aquino@gmail.com>"
 		fi	
 		exit 0
 		;;

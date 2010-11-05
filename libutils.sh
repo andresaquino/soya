@@ -3,23 +3,25 @@
 
 # libutils.sh -- library with some util functions
 # =-=
-# (c) 2009 StrategyLabs!
-# Andrés Aquino Morales <andres.aquino@gmail.com>
+# Developer
+# Andres Aquino Morales <andres.aquino@gmail.com>
 # 
 
 #
 # constants
 # initialize app enviroment
 APSYSO="`uname -s`"
-APHOST=`hostname `
+APHOST=`hostname | sed -e "s/\..*//g"`
 APUSER=`id -u -n`
 APDATE=`date "+%Y%m%d"`
 APHOUR=`date "+%H%M"`
+APLEVL="DEBUG"
 
 # globals
-APLOGS=
-APLOGP=
-APPRCS=
+export APLOGS=
+export APLOGP=
+export APLOGT=
+export APPRCS=
 APFLTR=
 
 #
@@ -74,6 +76,7 @@ set_environment () {
 		APPATH=${APHOME}/${APNAME}
 	fi
 	[ ! -d ${APPATH} ] && mkdir -p ${APPATH}
+	APPROF="`cat ${APPATH}/PROFILE`"
 
 	# log's path
 	if [ ${#APLOGD} -eq 0 ]
@@ -87,6 +90,7 @@ set_environment () {
 	[ ! -d ${APLOGD} ] && mkdir -p ${APLOGD}
 	[ ! -d ${APTEMP} ] && mkdir -p ${APTEMP}
 	
+	HOSTNAME=`hostname`
 	case "${APSYSO}" in
 		"HP-UX")
 			PSOPTS="-l -f -a -x -e"
@@ -103,6 +107,7 @@ set_environment () {
 			TAR=`which tar`
 			ZIP=`which gzip`
 			SCREEN=`which screen`
+			IPADDRESS=`${PING} ${HOSTNAME} -n 1 | awk '/icmp_seq=/{print $0}' | sed 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'`
 		;;
 			
 		"Linux")
@@ -120,6 +125,7 @@ set_environment () {
 			TAR=`which tar`
 			ZIP=`which gzip`
 			SCREEN=`which screen`
+			IPADDRESS=`${PING} -c 1 ${HOSTNAME} | awk '/icmp_seq=/{print $0}' | sed 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'`
 		;;
 		
 		"Darwin")
@@ -137,18 +143,15 @@ set_environment () {
 			TAR=`which tar`
 			ZIP=`which gzip`
 			SCREEN=`which screen`
+			IPADDRESS=`${PING} -c 1 ${HOSTNAME} | awk '/icmp_seq=/{print $0}' | sed 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'`
 		;;
 			
 		*)
 			PSOPTS="-l"
 			PSPOS=0
+			IPADDRESS="127.0.0.1"
 		;;
 	esac
-	IPADDRESS=`${PING} ${APHOST} ${PINGPARAMS} 1 2> /dev/null | awk '/bytes from/{gsub(":","",$4);print $4}' | sed -e "s/[a-zA-Z][a-zA-Z]*[\.]*[ ]*//g"`
-  [ "x$IPADDRESS" = "x" ] && IPADDRESS=`echo $SSH_CONNECTION 2> /dev/null | awk '{print $3}' | sed -e "s/.*://g;s/ .*//g"`
-  [ "x$IPADDRESS" = "x" ] && IPADDRESS=`${IFCONFIG} ${IFPARAMS}0 2> /dev/null | awk '/ inet/{print $2}' | head -n1 | sed -e "s/[a-z]*://g"`
-	[ "x$IPADDRESS" = "x" ] && IPADDRESS=`${IFCONFIG} ${IFPARAMS}1 2> /dev/null | awk '/ inet/{print $2}' | head -n1 | sed -e "s/[a-z]*://g"`
-																																					
 	log_action "DEBUG" "starting ${APNAME}, using a ${APSYSO} Platform System"
 }
 
@@ -199,9 +202,9 @@ set_proc () {
 	local AP_PROC=${1}
 
 	# process name
-	APPRCS=${AP_PROC}
-	APLOGP=${APLOGD}/${APPRCS}
-	APLOGT=${APTEMP}/${APPRCS}
+	export APPRCS=${AP_PROC}
+	export APLOGP=${APLOGD}/${APPRCS}
+	export APLOGT=${APTEMP}/${APPRCS}
 
 }
 
@@ -245,7 +248,7 @@ get_process_id () {
 		log_action "DEBUG" "hey, ${APPRCS} is not running in ${PIDFILE}.ps "
 		rm -f ${PIDFILE}.{pid,ppid} 2> /dev/null
 	fi
-	rm -f ${PIDFILE}.{pss} 2> /dev/null 
+	rm -f ${PIDFILE}.{pss} 2> /dev/null
 }
 
 #
@@ -274,7 +277,7 @@ process_running () {
 		log_action "DEBUG" "${STATUS}"
 		return ${RESULT}
 	else
-		rm -f ${PIDFILE}.* 2> /dev/null
+		rm -f ${PIDFILE}.*
 		return 1
 	fi
 }
@@ -296,7 +299,7 @@ processes_running () {
 			kill -0 ${PROCESS} > /dev/null 2>&1
 			RESULT=$?
 			[ ${RESULT} -ne 0 ] && log_action "DEBUG" "${PIDFILE} is not a valid process"
-			[ ${RESULT} -ne 0 ] && rm -f ${PIDFILE} 2> /dev/null 
+			[ ${RESULT} -ne 0 ] && rm -f ${PIDFILE}
 			return ${RESULT}
 		fi
 	done
@@ -373,13 +376,13 @@ report_status () {
 		tput cuu1 && tput cuf 80
 		case "${STATUS}" in
 			"*")
-				echo "${CCLEAR}[${CGREEN} ${STATUS} ${CCLEAR}]"
+				printto "${CCLEAR}[${CGREEN} ${STATUS} ${CCLEAR}]"
 			;;
 			"?")
-				echo "${CCLEAR}[${CRED} ${STATUS} ${CCLEAR}]"
+				printto "${CCLEAR}[${CRED} ${STATUS} ${CCLEAR}]"
 			;;
 			"i")
-				echo "${CCLEAR}[${CYELLOW} ${STATUS} ${CCLEAR}]"
+				printto "${CCLEAR}[${CYELLOW} ${STATUS} ${CCLEAR}]"
 			;;
 		esac
 	fi
@@ -413,6 +416,29 @@ filter_in_log () {
 }
 
 
+printto() {
+  local message="$1"
+
+	case "${APSYSO}" in
+		"HP-UX")
+			echo "$message"
+		;;
+			
+		"Linux")
+			echo -en "$message \n"
+		;;
+		
+		"Darwin")
+			echo -en "$message \n"
+		;;
+			
+		*)
+			echo "$message *"
+		;;
+	esac
+
+}
+
 #
 # waiting process indicator
 wait_for () {
@@ -429,7 +455,7 @@ wait_for () {
 		if [ "${STATUS}" != "CLEAR" ]
 		then
 			TIMETO=$((${TIMETO}*5))
-			echo " >>${STATUS} " | awk '{print substr($0"                                                                                        ",1,80)}'
+			printto " >>${STATUS} " | awk '{print substr($0"                                                                                        ",1,80)}'
 			tput sc
 			CHARPOS=1
 			while(${GOON})
@@ -438,7 +464,7 @@ wait_for () {
 				# recuperar la posicion en pantalla, ubicar en la columna 70 y subirse un renglon 
 				tput rc
 				tput cuu1 && tput cuf 80 
-				echo "${CCLEAR}[${CYELLOW} ${WAITCHAR} ${CCLEAR}]"
+				printto "${CCLEAR}[${CYELLOW} ${WAITCHAR} ${CCLEAR}]"
 				# incrementar posicion, si es igual a 5 regresar al primer caracter 
 				CHARPOS=$((${CHARPOS}+1))
 				[ ${CHARPOS} -eq 5 ] && CHARPOS=1
@@ -483,12 +509,13 @@ wait_for () {
 
 #
 # [] test para verificar los procesos asociados a un .pid
-#set_enviroment
-#processes_running "gvfs"
+#set_environment
+#set_proc "gvfs"
+#get_process_id "gvfs"
 #wait_for "CLEAR"
 
 # [ok] test para mostrar procesos
-#get_enviroment
+#set_environment
 #report_status "OK" "Reinicio WebLogic 9.2 "
 #report_status "ERR" "Reinicio WebLogic 9.2 "
 

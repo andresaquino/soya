@@ -1,11 +1,12 @@
 #!/bin/sh 
-# vim: set ts=3 sw=3 sts=3 et si ai: 
-# 
+# vim: set ts=2 sw=2 sts=2 si ai: 
+
 # install.sh -- instalar soya en el directorio
 # =-=
-# (c) 2008, 2009 Nextel de Mexico
-# Andrés Aquino Morales <andres.aquino@gmail.com>
+# Developer
+# Andres Aquino Morales <andres.aquino@gmail.com>
 # 
+
 
 mkdir -p ~/bin
 mkdir -p ~/manuals/man1
