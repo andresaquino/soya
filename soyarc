@@ -7,9 +7,13 @@
 # Andres Aquino Morales <andres.aquino@gmail.com>
 #
 
-APDEBUG=off
-APLOGD=$HOME/logs/soya
-#APHOME=/media/DELL/hp.com/soya.git
+export APHOME=$HOME
+export APPATH=$APHOME/soya
+export APLOGD=$APHOME/logs/soya
+
+# ver el verbose 
+export VIEWLOG=true
+export APDEBUG=on
 #APTYPE=CM | CX | BL | NM | FF
 #APCOMMAND="sh ~/scripts/start_cms.sh -name ${scrName}"
 

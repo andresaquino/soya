@@ -29,6 +29,9 @@ APTYPE="AP"
 # user enviroment
 . ${HOME}/.${APNAME}rc
 
+# application environment
+[ ${APLINK} != ${APNAME} ] && . ${APPATH}/setup/${APLINK}.conf
+
 # load user functions
 . ${APPATH}/libutils.sh
 set_environment
@@ -38,9 +41,6 @@ APACTION=`basename ${0#*.} | tr "[:lower:]" "[:upper:]"`
 SCRNAME=`echo ${APHOST} | sed -e "s/m.*hp//g;s/$/_______/g" | cut -c 1-4`
 SCRNAME=`echo ${SCRNAME}${APTYPE}${SCRPRCS} | tr "[:lower:]" "[:upper:]"`
 
-# application environment
-[ ${APLINK} != ${APNAME} ] && . ${APPATH}/setup/${APLINK}.conf
-
 # workaround
 [ ${#apType} -ne 0 ] && APTYPE=${apType}
 [ ${#apCommand} -ne 0 ] && APCOMMAND=${apCommand}
@@ -48,7 +48,7 @@ scrPrcs=${SCRPRCS}
 scrName=${SCRNAME}
 
 #
-#set_proc "${SCRNAME}"
+set_proc "${SCRNAME}"
 get_process_id "${SCRNAME}"
 log_action "DEBUG" "You're using ${APNAME} ${VERSION} release ${RELEASE}"
 
@@ -148,15 +148,18 @@ then
 	get_tree_of_applications 
 
 	#
-	echo "Execution's tree"
-	pos=" "
-	for APID in $(cat ${APLOGT}.list)
-	do
-		PNAME=`awk -v pid=${APID} -v pos=${PSPOS} '{if ($(3+pos) ~ pid){print}}' ${APLOGT}.allps | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null`
-		[ ${#pos} -gt 0 ] && pos="${pos} "
-		[ ${#pos} -eq 1 ] && index="${pos}+" || index="${pos}'-"
-		printto "[${APID}  ] ${index} ${PNAME}"
-	done
+	if [ -f ${APLOGT}.list ]
+	then
+		echo "Execution's tree"
+		pos=" "
+		for APID in $(cat ${APLOGT}.list)
+		do
+			PNAME=`awk -v pid=${APID} -v pos=${PSPOS} '{if ($(3+pos) ~ pid){print}}' ${APLOGT}.allps | sed -e "s/.*[0-9]:[0-9][0-9]//g" 2> /dev/null`
+			[ ${#pos} -gt 0 ] && pos="${pos} "
+			[ ${#pos} -eq 1 ] && index="${pos}+" || index="${pos}'-"
+			printto "[${APID}  ] ${index} ${PNAME}"
+		done
+	fi
 
 fi
 
