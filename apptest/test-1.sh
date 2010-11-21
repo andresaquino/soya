@@ -3,8 +3,7 @@
 # 
 # apptest.sh 
 # =-=
-# (c) 2008 NEXTEL DE MEXICO
-# Andres Aquino <cesar.aquino@nextel.com.mx>
+# Andres Aquino <andres.aquino@gmail.com>
 #
 
 echo "WORM TEST"
