@@ -17,8 +17,11 @@ ROADMAP
    {branch}
       {type}: {comment}
       {documentation}
+   v2.03-201011.09
+      TASK: actualizar documentacion en man y para usuarios
 
-   v2.03-rev20101108
+
+   v2.03-201011.08
       ENHANCEMENT: port de HPUX hacia Linux
       Algunas funciones no corresponden con los mismos datos entre HPUX y Linux, por lo tanto hay
       que migrarlas y hacer las correspondientes validaciones
