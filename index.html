@@ -52,10 +52,99 @@
       Platform Applications Container
     </div>
 
-    <p>Main Project Text</p><h2>Dependencies</h2>
+		<p>Main Project Text</p>
+<h2>Dependencies</h2>
 <p>Dependencies</p>
+<h2>Manual</h2>
+<pre>
+NAME
+     soya - start or stop soi platform applications
+
+SYNOPSIS
+     soya
+
+DESCRIPTION
+     Soya se puede usar  para  iniciar  cualquier proceso via el comando screen,
+     es un metascript que indicando los comandos en un archivo de configuracion,
+     facilita la ejecucion de los mismos.
+
+     Utiliza un directorio de configuracion, donde se almacenan los siguientes
+     archivos:
+      * soya.sh
+        Aplicacion principal
+
+      * soya.conf
+        Archivo de configuracion de parametros de aplicacion
+
+EXAMPLES
+     Para activar una nueva aplicacion es necesario hacer lo siguiente:
+     1. Crear una liga con el nombre de la aplicacion desde el directorio
+        $HOME/soya/setup con el parametro start y stop, ej.
+        ln -sf $HOME/soya/soya.sh $HOME/soya/setup/app.start 
+        ln -sf $HOME/soya/soya.sh $HOME/soya/setup/app.stop 
+ 
+     2. Crear un archivo de configuracion, donde se incluyan algunos de los
+        parametros necesarios para la aplicacion, ej:
+        # app.conf -- put here a short description.
+        # -----------------------------------------
+        apDebug=off
+        apType=CT
+        apCommand="sh ${HOME}/tomcat/bin/catalina.sh run"
+ 
+AUTHOR
+     soya v2.03 Rev.20101105 (bbd3) 
+     (c) 2010 Hewlett-Packard Company
+ 
+     Developed by 
+     Andres Aquino <andres.aquino@gmail.com> 
+                      
+BUGS
+     Muchos!
+      
+     Se necesitan traductores... !!!
+</pre>
 <h2>Install</h2>
-<p>Installation Instructions</p>
+<pre>
+[172.27.25.63(macuarrita)]: ~/Public                      
+andresaquino $> tar xvfz ~/Dropbox/nextel.com.mx/soya-v2.03Stable.tar.gz 
+x soya.git/
+x soya.git/.gitignore
+x soya.git/apptest/
+x soya.git/HISTORY
+x soya.git/INSTALL
+x soya.git/install.sh
+x soya.git/libutils.sh
+x soya.git/LICENSE
+x soya.git/man1/
+x soya.git/PROFILE
+x soya.git/README
+x soya.git/screenrc
+x soya.git/setup/
+x soya.git/soya.pod
+x soya.git/soya.sh
+x soya.git/soya.version
+x soya.git/soyarc
+x soya.git/VERSION
+x soya.git/setup/test-1.check
+x soya.git/setup/test-1.conf
+x soya.git/setup/test-1.start
+x soya.git/setup/test-1.stop
+x soya.git/setup/test-2.check
+x soya.git/setup/test-2.conf
+x soya.git/setup/test-2.start
+x soya.git/setup/test-2.stop
+x soya.git/man1/soya.1
+x soya.git/apptest/stop.sh
+x soya.git/apptest/test-1.sh
+x soya.git/apptest/test-2.sh
+
+[172.27.25.63(macuarrita)]: ~/Public                      
+andresaquino $> cd soya.git
+
+[172.27.25.63(macuarrita)]: ~/Public/soya.git 
+andresaquino $> sh install.sh
+
+</pre>
 <h2>License</h2>
 <pre>Copyright (c) 2010, Andres Aquino
 All rights reserved.
