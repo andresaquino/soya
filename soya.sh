@@ -4,7 +4,7 @@
 # soya.sh - SOI Platform Applications Container
 # =-=
 # Developer
-# Andres Aquino Morales <andres.aquino@gmail.com>
+# Andres Aquino <aquino@hp.com>
 # 
 
 
@@ -197,7 +197,7 @@ fi
 # app.logsOn | app.logsOff | app.backUp | app.logsClear 
 case ${APACTION}  in
 	LOGSON)
-		executeCmd "${APLOGSOn}"
+		executeCmd "${APLOGSON}"
 		exit 0
 		;;
 
@@ -250,7 +250,7 @@ case ${APACTION}  in
 		if [ "${TTYTYPE}" = "CONSOLE" ]
 		then 
 			printto  "Developed by"
-			printto  "Andres Aquino <andres.aquino@gmail.com>"
+			printto  "Andres Aquino <aquino@hp.com>"
 		fi	
 		exit 0
 		;;
