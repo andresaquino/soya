@@ -42,6 +42,7 @@ echo "Se respaldo la anterior configuracion en $HOME/soya.old"
 echo "Siempre podras consultar el manual con: man soya"
 cp ~/soya/man1/soya.1 ~/manuals/man1/
 
+ln -sf ~/soya/soya.sh ~/soya/soya.version
 ln -sf ~/soya/soyarc ~/.soyarc
 ln -sf ~/soya/screenrc ~/.screenrc
 
