@@ -4,7 +4,7 @@
 # .screenrc -- screen rc file configuration
 # =-=
 # Mainteiner
-# Andres Aquino Morales <andres.aquino@gmail.com>
+# Andres Aquino <aquino@hp.com>
 # 
 
 #
@@ -13,7 +13,6 @@ startup_message off
 vbell off
 msgwait 1
 hardstatus alwayslastline
-termcapinfo xterm* ti@:te@
 altscreen on
 
 #
