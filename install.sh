@@ -16,9 +16,18 @@ cd ~
 echo "Migrando configuraciones"
 [ -d ~/soya ] && cp -rp ~/soya/setup/*.conf ~/soya.git/setup/ 
 cd ~/soya.git/setup/
-for ap in *.conf; do ln -sf ../soya.sh ${ap%.conf}.stop;done
-for ap in *.conf; do ln -sf ../soya.sh ${ap%.conf}.start;done
-for ap in *.conf; do ln -sf ../soya.sh ${ap%.conf}.check;done
+for ap in *.conf
+do
+	ln -sf ../soya.sh ${ap%.conf}.start
+	ln -sf ../soya.sh ${ap%.conf}.stop
+	ln -sf ../soya.sh ${ap%.conf}.check
+	ln -sf ../soya.sh ${ap%.conf}.logson
+	ln -sf ../soya.sh ${ap%.conf}.logsoff
+	ln -sf ../soya.sh ${ap%.conf}.syslogson
+	ln -sf ../soya.sh ${ap%.conf}.syslogsoff
+	ln -sf ../soya.sh ${ap%.conf}.dblogson
+	ln -sf ../soya.sh ${ap%.conf}.dblogsoff
+done
 
 cd ~
 # mover actual como backup
