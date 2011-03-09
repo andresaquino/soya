@@ -31,10 +31,6 @@ SCRPRCS=`echo ${APLINK} | sed -e "s/[a-zA-Z\.-]/0/g;s/.*\([0-9][0-9]\)$/\1/g"`
 APTYPE="AP"
 [ ${APLINK} != ${APNAME} ] && APTYPE=`grep -i aptype ${APLINK}.conf | sed -e "s/.*=//g" 2> /dev/null`
 
-# check deprecated environment
-[ ${apType} ] && APTYPE=${apType} && log_action "DEBUG" "DEPRECATED: Please change to uppercase apType variable"
-[ ${apCommand} ] && APCOMMAND=${apCommand} && log_action "DEBUG" "DEPRECATED: Please change to uppercase apCommand variable"
-
 # send version
 log_action "DEBUG" "You're using ${APNAME} ${VERSION} release ${RELEASE}"
 
@@ -44,8 +40,15 @@ APACTION=`basename ${0#*.} | tr "[:lower:]" "[:upper:]"`
 SCRNAME=`echo ${APHOST} | rev | cut -c 1-4 | rev`
 SCRNAME=`echo ${SCRNAME}${APTYPE}${SCRPRCS} | tr "[:lower:]" "[:upper:]"`
 
+# workaround: please check this variable in *.conf
+scrName=${SCRNAME}
+
 # application's environment
 [ ${APLINK} != ${APNAME} ] && . ${APPATH}/setup/${APLINK}.conf
+
+# check deprecated environment
+[ ${#apType}  -ne 0 ] && APTYPE=${apType} && log_action "DEBUG" "DEPRECATED: Please change to uppercase apType variable"
+[ ${#apCommand} -ne 0 ] && APCOMMAND=${apCommand} && log_action "DEBUG" "DEPRECATED: Please change to uppercase apCommand variable"
 
 #
 set_proc "${SCRNAME}"
