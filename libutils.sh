@@ -110,7 +110,8 @@ set_environment () {
       MAIL=`which mailx`
       TAR=`which tar`
       ZIP=`which gzip`
-      IPADDRESS=`${PING} ${HOSTNAME} -n 1 | awk '/icmp_seq=/{print $0}' | sed 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'`
+      SCREEN=`which screen`
+      IPADDRESS=`${PING} ${HOSTNAME} -n 1 | awk '/icmp_=/{print $0}' | sed 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'`
     ;;
       
     "Linux")
@@ -127,6 +128,7 @@ set_environment () {
       MAIL=`which mail`
       TAR=`which tar`
       ZIP=`which gzip`
+      SCREEN=`which screen`
       IPADDRESS=`${PING} -c 1 ${HOSTNAME} | awk '/icmp_seq=/{print $0}' | sed 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'`
     ;;
     
@@ -144,6 +146,7 @@ set_environment () {
       MAIL=`which mail`
       TAR=`which tar`
       ZIP=`which gzip`
+      SCREEN=`which screen`
       IPADDRESS=`${PING} -c 1 ${HOSTNAME} | awk '/icmp_seq=/{print $0}' | sed 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'`
     ;;
       
