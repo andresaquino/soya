@@ -18,10 +18,10 @@ APHOUR=`date "+%H%M"`
 APLEVL="DEBUG"
 
 # globals
-#APLOGS=
-#APLOGP=
-#APLOGT=
-APPRCS=
+export APLOGS=
+export APLOGP=
+export APLOGT=
+export APPRCS=
 APFLTR=
 
 #
@@ -40,14 +40,20 @@ set_environment () {
     stty susp '^Z'
     stty werase '^W'
 
-    CCLEAR='\033[00m'
-    CWHITE='\033[01;37m'
-    CRED='\033[01;31m'
-    CGREEN='\033[01;32m'
-    CYELLOW='\033[01;33m'
-    CBLUE='\033[01;34m'
-    CGRAY='\033[01;30m'
+    # workaround
+    CLTYPE="\e"
+    [ "${APSYSO}" = "HP-UX" ] && CLTYPE="\033"
+ 
+    # command line _eye candy_
+    CCLEAR="${CLTYPE}[0m"
+    CGRAY="${CLTYPE}[01;30m"
+    CRED="${CLTYPE}[01;31m"
+    CGREEN="${CLTYPE}[01;32m"
+    CYELLOW="${CLTYPE}[01;33m"
+    CBLUE="${CLTYPE}[01;34m"
+    CWHITE="${CLTYPE}[01;37m"
   else
+    # command line _eye candy_
     CCLEAR=
     CWHITE=
     CRED=
@@ -104,7 +110,6 @@ set_environment () {
       MAIL=`which mailx`
       TAR=`which tar`
       ZIP=`which gzip`
-      SCREEN=`which screen`
       IPADDRESS=`${PING} ${HOSTNAME} -n 1 | awk '/icmp_seq=/{print $0}' | sed 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'`
     ;;
       
@@ -122,12 +127,11 @@ set_environment () {
       MAIL=`which mail`
       TAR=`which tar`
       ZIP=`which gzip`
-      SCREEN=`which screen`
       IPADDRESS=`${PING} -c 1 ${HOSTNAME} | awk '/icmp_seq=/{print $0}' | sed 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'`
     ;;
     
     "Darwin")
-      PSOPTS="lax"
+      PSOPTS="-leax"
       PSPOS=-1
       DFOPTS="-P -k"
       MKOPTS="-t "
@@ -140,7 +144,6 @@ set_environment () {
       MAIL=`which mail`
       TAR=`which tar`
       ZIP=`which gzip`
-      SCREEN=`which screen`
       IPADDRESS=`${PING} -c 1 ${HOSTNAME} | awk '/icmp_seq=/{print $0}' | sed 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'`
     ;;
       
@@ -164,6 +167,7 @@ set_name () {
   APPATH=${AP_PATH}
   [ ! -d ${APPATH} ] && mkdir -p ${APPATH}
   
+  #APLOGD=${APHOME}/logs
   APLOGS=${APLOGD}/${APNAME}
   [ ! -d ${APLOGD} ] && mkdir -p ${APLOGD}
 
@@ -243,9 +247,9 @@ get_process_id () {
     ${VIEWMLOG} && report_status "i" "${PIDFILE}.allps < /${WRDSLIST}/ = dawm!"
     # eliminar archivos ppid, en caso de que el proceso ya no exista
     log_action "DEBUG" "hey, ${APPRCS} is not running in ${PIDFILE}.ps "
-    rm -f ${PIDFILE}.{pid,ppid} 2> /dev/null
+    rm -f ${PIDFILE}.{pid,ppid}
   fi
-  rm -f ${PIDFILE}.{pss} 2> /dev/null
+  rm -f ${PIDFILE}.{pss}
 }
 
 #
@@ -416,21 +420,22 @@ filter_in_log () {
 printto() {
   local message="$1"
 
+  _echo=`which echo`
   case "${APSYSO}" in
     "HP-UX")
-      echo "$message"
+      $_echo "$message"
     ;;
       
     "Linux")
-      echo -en "$message \n"
+      $_echo -e -n "$message \n"
     ;;
     
     "Darwin")
-      echo -en "$message \n"
+      $_echo -e -n "$message \n"
     ;;
       
     *)
-      echo "$message *"
+      $_echo "$message *"
     ;;
   esac
 
