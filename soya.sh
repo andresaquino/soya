@@ -31,6 +31,10 @@ SCRPRCS=`echo ${APLINK} | sed -e "s/[a-zA-Z\.-]/0/g;s/.*\([0-9][0-9]\)$/\1/g"`
 APTYPE="AP"
 [ ${APLINK} != ${APNAME} ] && APTYPE=`grep -i aptype ${APLINK}.conf | sed -e "s/.*=//g" 2> /dev/null`
 
+# check deprecated environment
+[ ${apType} ] && APTYPE=${apType} && log_action "DEBUG" "DEPRECATED: Please change to uppercase apType variable"
+[ ${apCommand} ] && APCOMMAND=${apCommand} && log_action "DEBUG" "DEPRECATED: Please change to uppercase apCommand variable"
+
 # send version
 log_action "DEBUG" "You're using ${APNAME} ${VERSION} release ${RELEASE}"
 
