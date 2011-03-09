@@ -20,7 +20,7 @@ APTYPE="AP"
 VIEWLOG=true
 
 # log on screen to log file
-APDEBUG=true
+APDEBUG=false
 APDLINES=40
 
 # commands to CMS's
