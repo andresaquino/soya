@@ -10,15 +10,20 @@
 
 #
 # default enviroment
-APNAME="soya"
 APLINK=`basename ${0%.*}`
-APPATH="${HOME}/${APNAME}"
-APLOGD="${HOME}/logs"
 APLEVL="DEBUG"
 APTYPE="AP"
 VIEWLOG=false
 VIEWMLOG=false
-APDEBUG=off
+
+# applications enviroment
+. ${HOME}/.soyarc
+
+# load user functions
+. ${APPATH}/libutils.sh
+set_environment
+
+# soya's environment
 SCRPRCS=0
 VERSION="`cat ${APPATH}/VERSION | sed -e 's/-rev/ Rev./g'`"
 RELEASE=`openssl dgst -md5 ${APPATH}/${APNAME}.sh | rev | cut -c-4 | rev`
@@ -26,36 +31,26 @@ SCRPRCS=`echo ${APLINK} | sed -e "s/[a-zA-Z\.-]/0/g;s/.*\([0-9][0-9]\)$/\1/g"`
 APTYPE="AP"
 [ ${APLINK} != ${APNAME} ] && APTYPE=`grep -i aptype ${APLINK}.conf | sed -e "s/.*=//g" 2> /dev/null`
 
-# user enviroment
-. ${HOME}/.${APNAME}rc
+# send version
+log_action "DEBUG" "You're using ${APNAME} ${VERSION} release ${RELEASE}"
 
-# application environment
+# application's environment
 [ ${APLINK} != ${APNAME} ] && . ${APPATH}/setup/${APLINK}.conf
 
-# load user functions
-. ${APPATH}/libutils.sh
-set_environment
-
 # virtual terminal name
+[ ${APDEBUG} ] && APDEBUG="on" || APDEBUG="off"
 APACTION=`basename ${0#*.} | tr "[:lower:]" "[:upper:]"`
-SCRNAME=`echo ${APHOST} | sed -e "s/m.*hp//g;s/$/_______/g" | cut -c 1-4`
+SCRNAME=`echo ${APHOST} | rev | cut -c 1-4 | rev`
 SCRNAME=`echo ${SCRNAME}${APTYPE}${SCRPRCS} | tr "[:lower:]" "[:upper:]"`
-
-# workaround
-[ ${#apType} -ne 0 ] && APTYPE=${apType}
-[ ${#apCommand} -ne 0 ] && APCOMMAND=${apCommand}
-scrPrcs=${SCRPRCS}
-scrName=${SCRNAME}
 
 #
 set_proc "${SCRNAME}"
 get_process_id "${SCRNAME}"
-log_action "DEBUG" "You're using ${APNAME} ${VERSION} release ${RELEASE}"
 
 
 ##
 executeCmd () {
-	local STRCOMMAND=${1}
+	local STRCOMMAND="${1}"
 
 	# eliminar referencias nulas del screen
 	${SCREEN} -wipe > /dev/null 2&>1
@@ -69,10 +64,11 @@ executeCmd () {
 	# ejecutar el comando
 	log_action "DEBUG" "Executing ${STRCOMMAND} in screen ${SCRNAME}"
 	${SCREEN} -x ${SCRNAME} -p 0 -X stuff "$(printf '%b' "${STRCOMMAND}\015")"
-	wait_for "Executing command ${STRCOMMAND} on ${SCRNAME} " 4
+	wait_for "Executing command ${STRCOMMAND} on ${SCRNAME} " 2
 
 	# reportar el estado de la ejecucion
 	log_action "DEBUG" "${STRCOMMAND} on ${SCRNAME} cooked, go home baby! "
+	report_status "*" "Command ${STRCOMMAND} on ${SCRNAME} executed, go home baby!"
  
 }
 
@@ -109,8 +105,8 @@ then
 	get_tree_of_applications
 
 	# verificar si ya existe una terminal
-	[ -s ${APLOGT}.pid ] && report_status "i" "Wops, another ${SCRNAME} virtual terminal process exist!"
-	[ -s ${APLOGT}.pid ] && log_action "DEBUG" "Wops, another ${SCRNAME} virtual terminal process exist!"
+	[ -s ${APLOGT}.pid ] && report_status "i" "Wops, another ${SCRNAME} VirtualTerminal process exist!"
+	[ -s ${APLOGT}.pid ] && log_action "DEBUG" "Wops, another ${SCRNAME} VirtualTerminal process exist!"
 	[ -s ${APLOGT}.pid ] && exit 1
 
 	# backup
@@ -122,7 +118,7 @@ then
 	${SCREEN} -d -m -S ${SCRNAME}
 	${SCREEN} -r ${SCRNAME} -p 0 -X log off
 	${SCREEN} -r ${SCRNAME} -p 0 -X logfile ${APLOGP}.log
-	${SCREEN} -r ${SCRNAME} -p 0 -X logfile flush 10
+	${SCREEN} -r ${SCRNAME} -p 0 -X logfile flush ${APDLINES}
 	${SCREEN} -r ${SCRNAME} -p 0 -X log ${APDEBUG}
 	log_action "DEBUG" "Creating VirtualTerminal ${SCRNAME}, logfile as ${APLOGP}.log in mode ${APDEBUG}"
 	wait_for "Starting ${SCRNAME} virtual terminal " 2
@@ -134,8 +130,8 @@ then
 
 	# get the tree applications
 	process_running
-	[ -s ${APLOGT}.pid ] && report_status "*" "[${APCOMMAND}] running in ${APPRCS} right now" ||
-	                        report_status "?" "[${APCOMMAND}] in ${APPRCS} failed to initialize"
+	[ -s ${APLOGT}.pid ] && report_status "*" "[${APLINK}] running in ${APPRCS} right now" ||
+	                        report_status "?" "[${APLINK}] in ${APPRCS} failed to initialize"
 
 fi
 
@@ -189,6 +185,7 @@ then
 		[ $LASTSTATUS -eq 0 ] && $(kill -9 ${APID} > /dev/null 2>&1)
 		[ $LASTSTATUS -eq 0 ] && log_action "DEBUG" "Process ${PNAME} finalized "
 	done
+	rm -f ${APLOGT}.*
 	report_status "*" "VirtualTerminal process ${SCRNAME} and subprocesses finalized"
 
 fi
@@ -245,7 +242,7 @@ case ${APACTION}  in
 	VERSION)
 		#
 		printto "${APNAME} ${VERSION} (${RELEASE})"
-		printto "(c) 2010 ${APPROF}\n"
+		printto "${APPROF}\n"
 
 		if [ "${TTYTYPE}" = "CONSOLE" ]
 		then 
