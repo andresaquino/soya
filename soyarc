@@ -1,12 +1,13 @@
 # CONF 
 # vim: set ts=2 sw=2 sts=2 et si ai syntax=sh:
  
-# soyarc -- SOI Applications Setup
+# soyarc - SOI Platform Applications Container Setup
 # =-=
 #
 # Developer
 # Andres Aquino <aquino@hp.com>
 #
+
 
 APNAME="soya"
 APHOME=${HOME}

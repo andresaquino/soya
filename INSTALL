@@ -5,11 +5,13 @@
 SOI Platform Applications Container
 =-=
 
-COMO INSTALAR ?
+Installation
+   1. Download the source code from https://github.com/andresaquino/soya
+   2. Uncompress in user home directory
+   3. Execute sh ~/soya.git/install.sh
+   4. Verify with sh ~/soya/soya.version
 
- 1. Bajar el paquete soya-2.01Stable.tar.gz
- 2. Descomprimir
- 3. Ejecutar el script: install.sh
- 4. Verificar instalación: sh soya.version
-    ... enjoy !
+That's all, enjoy!
 
+
+# vim: set ts=3 sw=3 sts=3 et si ai tw=100 lbr:

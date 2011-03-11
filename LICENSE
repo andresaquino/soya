@@ -1,4 +1,4 @@
-Copyright (c) 2010, Andres Aquino
+(c) 2009, 2010, 2011 Nextel de Mexico
 All rights reserved.
 
 Redistribution and use in  source and binary forms, with or without modification,
@@ -24,6 +24,8 @@ LIABILITY, WHETHER IN CONTRACT,  STRICT  LIABILITY, OR TORT (INCLUDING NEGLIGENC
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
 OF THE POSSIBILITY OF SUCH DAMAGE.
 
+--
+Andres Aquino <aquino@hp.com>
 
 See it on line
 http://creativecommons.org/licenses/BSD/
