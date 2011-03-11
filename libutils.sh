@@ -3,8 +3,9 @@
 
 # libutils.sh -- library with some util functions
 # =-=
+#
 # Developer
-# Andres Aquino Morales <andres.aquino@gmail.com>
+# Andres Aquino <aquino@hp.com>
 # 
 
 #
@@ -80,7 +81,7 @@ set_environment () {
     APPATH=${APHOME}/${APNAME}
   fi
   [ ! -d ${APPATH} ] && mkdir -p ${APPATH}
-  APPROF="`cat ${APPATH}/PROFILE`"
+  [ -s ${APPATH}/PROFILE ] && APPROF="`cat ${APPATH}/PROFILE`" || APPROF="(c) 2011, Andres Aquino <andres.aquino@gmail.com>"
 
   # log's path
   if [ ${#APLOGD} -eq 0 ]
