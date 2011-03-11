@@ -35,7 +35,7 @@ APTYPE="AP"
 log_action "DEBUG" "You're using ${APNAME} ${VERSION} release ${RELEASE}"
 
 # virtual terminal name
-[ ${APDEBUG} ] && APDEBUG="on" || APDEBUG="off"
+${APDEBUG} && APDEBUG="on" || APDEBUG="off"
 APACTION=`basename ${0#*.} | tr "[:lower:]" "[:upper:]"`
 SCRNAME=`echo ${APHOST} | rev | cut -c 1-4 | rev`
 SCRNAME=`echo ${SCRNAME}${APTYPE}${SCRPRCS} | tr "[:lower:]" "[:upper:]"`
