@@ -1,0 +1,57 @@
+=pod
+
+=head1 NAME
+
+  soya - SOI Platform Applications Container
+
+=head1 SYNOPSIS
+
+  soya
+
+=head1 DESCRIPTION 
+ 
+  Soya se puede usar  para  iniciar  cualquier proceso via el comando screen,
+  es un metascript que indicando los comandos en un archivo de configuracion,
+  facilita la ejecucion de los mismos.
+
+  Utiliza un directorio de configuracion, donde se almacenan los siguientes
+  archivos:
+    * soya.sh
+      Aplicacion principal
+
+    * soya.conf
+      Archivo de configuracion general
+
+
+=head1 EXAMPLES
+
+  Para activar una nueva aplicacion es necesario hacer lo siguiente:
+    1.  Crear una liga con el nombre de la aplicacion desde el directorio
+        $HOME/soya/setup con el parametro start y stop, ej.
+          ln -sf $HOME/soya/soya.sh $HOME/soya/setup/app.start 
+          ln -sf $HOME/soya/soya.sh $HOME/soya/setup/app.stop 
+ 
+    2.  Crear un archivo de configuracion, donde se incluyan algunos de los
+        parametros necesarios para la aplicacion, ej:
+          # app.conf -- put here a short description.
+          # -----------------------------------------
+          APDEBUG=off
+          APTYPE=CT
+          APCOMMAND="sh ${HOME}/tomcat/bin/catalina.sh run"
+ 
+=head1 AUTHOR
+
+  soya v2.06 
+  (c) 2009, 2010, 2011 Nextel de Mexico
+ 
+  Developed by 
+  Andres Aquino <aquino@hp.com> 
+
+=head1 BUGS
+
+ Muchos!
+
+ Se necesitan traductores... !!!
+
+=cut
+# vim: set ts=2 sw=2 sts=2 et si ai:
