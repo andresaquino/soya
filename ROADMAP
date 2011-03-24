@@ -5,26 +5,18 @@
 SOI Platform Applications Container
 =-=
 
-1.09
-----
-   *
-
-2.03
-----
-   *
-
-2.04
-----
-   *
-
-2.05
-----
-   * 
-
 2.06
 ----
-   * 
+   *  Estabilizar, creo que la parte en como lo diseñe (a la Gentoo) en la parte de las
+      configuraciones no es taaaaan eficiente (o eso creo), porque no puedo crear mas comandos para
+      mandar al screen.
+   *  Igual y hacer un refactory de toda la aplicacion para cuando se haga el porting a PERL, se
+      necesitan manos.. alguien quiere colaborar?
 
+3.00
+----
+   *  Portar a PERL, necesitamos hacerlo mas eficiente!
+      Algo como la configuracion que se tiene en monopse seria un ideal...
 
 
 # vim: set ts=3 sw=3 sts=3 et si ai tw=100 lbr:
