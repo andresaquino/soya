@@ -36,7 +36,6 @@ APTYPE="AP"
 log_action "DEBUG" "You're using ${APNAME} ${VERSION} release ${RELEASE}"
 
 # virtual terminal name
-${APDEBUG} && APDEBUG="on" || APDEBUG="off"
 APACTION=`basename ${0#*.} | tr "[:lower:]" "[:upper:]"`
 SCRNAME=`echo ${APHOST} | rev | cut -c 1-4 | rev`
 SCRNAME=`echo ${SCRNAME}${APTYPE}${SCRPRCS} | tr "[:lower:]" "[:upper:]"`
@@ -46,6 +45,9 @@ scrName=${SCRNAME}
 
 # application's environment
 [ ${APLINK} != ${APNAME} ] && . ${APPATH}/setup/${APLINK}.conf
+
+# if APDEBUG is true, change to "on" because screen log command require it 
+${APDEBUG} && APDEBUG="on" || APDEBUG="off"
 
 # check deprecated environment
 [ ${#apType}  -ne 0 ] && APTYPE=${apType} && log_action "DEBUG" "DEPRECATED: Please change to uppercase apType variable"
